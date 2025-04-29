@@ -38,7 +38,7 @@ router.post('/login', async (req: Request, res: Response) => {
         const user = (result as any[])[0];
 
         // Comprobar la contraseña
-        const match = await bcrypt.compare(pwd, user.PWDHash);
+        const match = await bcrypt.compare(pwd, user.contrasenia);
         if (!match) {
             res.status(401).send('Contraseña incorrecta');
             return;

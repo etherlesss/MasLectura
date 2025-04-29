@@ -1,5 +1,5 @@
 <template>
-    <form>
+    <form @submit.prevent="handleSubmit">
         <!-- Titulo y subtitulo -->
         <div class="greet text-center">
             <h1>¡Bienvenido de vuelta!</h1>
@@ -27,10 +27,50 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import { useAuthStore } from '@/stores/token';
 import { login } from '@/api/api';
 
 const mail = ref<string>('');
 const pwd = ref<string>('');
+const authStore = useAuthStore();
+
+const handleSubmit = async () => {
+    try {
+        const res = await login({ mail: mail.value, pwd: pwd.value });
+
+        // Checkear la existencia del usuario
+        if (res.status === 404) {
+            alert('Usuario no encontrado. Por favor verifica tus credenciales.');
+            return;
+        }
+
+        // Checkear si la contraseña es correcta
+        if (res.status === 401) {
+            alert('Contraseña incorrecta. Por favor verifica tus credenciales.');
+            return;
+        }
+
+        // Verificar acceso
+        if (res.token) {
+            // Obtener token
+            const token = res.token;
+            // Obtener datos del usuario
+            const user = res.user;
+            // Obtener fecha de expiración del token
+            const expDate = new Date(res.expDate);
+
+            // Almacenar token y datos en el store de Pinia
+            authStore.setToken(token, expDate);
+            authStore.setUser(user);
+
+            // Redirigir a la página principal
+            window.location.href = '/';
+        }
+    } catch (err) {
+        console.error('Error al iniciar sesión:', err);
+        alert('Ocurrió un error inesperado al iniciar sesión.');
+    }
+}
 
 </script>
 

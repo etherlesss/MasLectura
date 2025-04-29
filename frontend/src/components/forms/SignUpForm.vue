@@ -96,8 +96,8 @@ const handleSubmit = async () => {
         alert('La cuenta ha sido creada exitosamente. Por favor, inicia sesión.');
         // Redirigir a la página de inicio de sesión
         window.location.href = '/login';
-    } catch (error) {
-        console.error('Error al crear la cuenta:', error);
+    } catch (err) {
+        console.error('Error al crear la cuenta:', err);
         alert('Ocurrió un error inesperado al crear la cuenta.');
     }
 }
