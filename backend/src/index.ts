@@ -2,23 +2,19 @@
 import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
-// import mysql from 'mysql2';
-// import jwt from 'jsonwebtoken';
-// import bcrypt from 'bcrypt';
 
 // Importar base de datos
 import db from './db';
 
 // Importar rutas
 import login from './routes/login';
+import signup from './routes/signup';
 
 // Cargar variables de entorno
 dotenv.config();
 
 // Definir las variables
 const PORT = process.env.PORT || 3000;
-// const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
-// const SALT_ROUNDS = process.env.SALT_ROUNDS;
 
 // Crear la aplicación Express
 const app = express();
@@ -52,3 +48,4 @@ app.listen(PORT, () => {
 
 // Rutas de la API
 app.use('/api', login);
+app.use('/api', signup);

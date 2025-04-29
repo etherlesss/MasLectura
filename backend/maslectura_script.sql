@@ -6,7 +6,7 @@ CREATE TABLE Usuario (
 	id_usuario INT PRIMARY KEY AUTO_INCREMENT,
     nombre_usuario VARCHAR(255) NOT NULL,
     mail_usuario VARCHAR(255) UNIQUE NOT NULL,
-    contraseña VARCHAR(255) NOT NULL, -- HASH
+    contrasenia VARCHAR(255) NOT NULL, -- HASH
     genero_usuario VARCHAR(50) NOT NULL,
     rol VARCHAR(50) NOT NULL,
     fecha_nacimiento DATE NOT NULL

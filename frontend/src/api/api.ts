@@ -47,6 +47,10 @@ export async function login(data: any) {
     return POSTRequest('/login', data);
 }
 
+export async function signup(data: any) {
+    return POSTRequest('/signup', data);
+}
+
 /*
     PATCH
 */
