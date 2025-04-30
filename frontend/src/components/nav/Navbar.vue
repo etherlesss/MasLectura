@@ -17,6 +17,9 @@
                     <RouterLink to="/">Inicio</RouterLink>
                 </li>
                 <li class = "nav-links">
+                    <RouterLink to="/search">Libros</RouterLink>
+                </li>
+                <li class = "nav-links">
                     <RouterLink to="/login">Iniciar Sesion</RouterLink>
                 </li>
                 <li class = "nav-links">
