@@ -2,7 +2,7 @@
 <template>
   <div>
     <Navbar />
-  </div>
+  
   
   <div class = "body">
     <h1>Welcome to the Home Page</h1>
@@ -11,10 +11,10 @@
       <img src="../assets/test/Angel4.jpg" alt="foto-prueba">
     </div>
   </div>
-  
-  <div>
+
     <Footer/>
-  </div>
+
+</div>
 </template>
 <script setup lang="ts">
 import Navbar from '@/components/nav/Navbar.vue';
@@ -24,8 +24,9 @@ import Footer from '@/components/pageFooter/Footer.vue';
 <style scoped>
 
 .test img{
-  width: 100%;
-  height: 100%;
+  width: 100%  ;
+  height: 100% ;
+  align-items: center;
 }
 
 .body{
@@ -33,4 +34,6 @@ import Footer from '@/components/pageFooter/Footer.vue';
   margin: 0px;
   min-height: 100vh;
 }
+
+
 </style>
