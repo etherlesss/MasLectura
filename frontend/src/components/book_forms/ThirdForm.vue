@@ -7,7 +7,8 @@
     <form class="row g-3">
         <!-- Sección Género -->
         <div class="col-md-12">
-            <label class="form-label mb-1">Género</label>
+            <h6>Generos</h6>
+            <label class="form-label mb-1"></label>
             <div class="genre d-flex flex-wrap gap-3">
                 <div class="form-check" v-for="genero in generos" :key="genero.id">
                     <input

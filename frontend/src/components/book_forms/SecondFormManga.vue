@@ -27,9 +27,10 @@
         <div class="col-md-6">
             <label for="inputIdioma" class="form-label mb-1">Idioma</label>
             <select v-model="idioma" id="inputIdioma" class="form-select" required>
-                <option value="1">Español</option>
-                <option value="2">Inglés</option>
-                <option value="3">Otro</option>
+                <option selected>Ninguno</option>
+                <option value="Espanol">Español</option>
+                <option value="Ingles">Inglés</option>
+                <option value="Otro">Otro</option>
             </select>
         </div>
         <div class="col-md-6">
@@ -63,8 +64,11 @@
             <label for="formFile" class="form-label">Portada</label>
             <input class="form-control" type="file" id="formFile" required>
         </div>
+        <div class="mb-3">
+            <label for="sinopsis" class="form-label mb-1">Sinopsis</label>
+            <textarea class="form-control" id="sinopsis" rows="3" v-model="sinopsis"></textarea>
+        </div>
         <div class="save-button">
-            <!-- Asegúrate de que el evento @click dispare la función de guardar correctamente -->
             <button type="button" @click="guardarFormulario" aria-label="Guardar">
                 Guardar
             </button>
@@ -75,7 +79,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
-// Variables para los campos del formulario
+
 const titulo = ref('');
 const autor = ref('');
 const artista = ref('');
@@ -86,8 +90,9 @@ const numeroCapitulos = ref('');
 const url = ref('');
 const serieFinalizada = ref('');
 const portada = ref('');
+const sinopsis= ref('');
 
-// Emitir evento al guardar los datos
+
 const emit = defineEmits(['guardar']);
 
 function guardarFormulario() {
@@ -102,8 +107,9 @@ function guardarFormulario() {
     url: url.value,
     serieFinalizada: serieFinalizada.value,
     portada: portada.value,
+    sinopsis: sinopsis.value
   };
-  emit('guardar', datos); // Emitir los datos al componente padre
+  emit('guardar', datos); 
 }
 </script>
 

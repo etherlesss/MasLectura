@@ -30,11 +30,11 @@
     const tipo = ref('');
 
     function emitirSeleccion() {
-    emit('tipoSeleccionado', tipo.value);
-    emitirDatos();
+        emit('tipoSeleccionado', tipo.value);
+        emitirDatos();
     }
     function emitirDatos() {
-    emit('guardar', { tipo: tipo.value }); 
+        emit('guardar', { tipo: tipo.value }); 
     }
     
 

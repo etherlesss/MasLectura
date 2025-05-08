@@ -6,38 +6,38 @@
     <form class="row g-3">
         <div class="col-md-6">
             <label for="inputTittle" class="form-label mb-1">Titulo</label>
-            <input type="text" class="form-control" id="inputTittle">
+            <input  v-model="titulo" type = "text" class="form-control" id="inputTittle" required>
         </div>
         <div class="col-md-6">
             <label for="inputAutor" class="form-label mb-1">Autor</label>
-            <input type="text" class="form-control" id="inputAutor">
+            <input v-model="autor" type="text" class="form-control" id="inputAutor" required>
         </div>
         <div class="col-md-6">
             <label for="inputEditorial" class="form-label mb-1">Editorial</label>
-            <input type="text" class="form-control" id="inputEditorial">
+            <input  v-model="editorial" type="text" class="form-control" id="inputEditorial" required>
         </div>
         <div class="col-md-6">
             <label for="inputPublication" class="form-label mb-1">Fecha de publicacion</label>
-            <input v-model="birthdate" type="date" class="form-control" id="inputPublication" required>
+            <input v-model="fechaPublicacion" type="date" class="form-control" id="inputPublication" required>
         </div>
         <div class="col-md-6">
             <label for="inputIdioma" class="form-label mb-1">Idioma</label>
-            <select id="inputIdioma" class="form-select">
+            <select  v-model="idioma" id="inputIdioma" class="form-select" required>
                 <option selected>Ninguno</option>
-                <option value="1">Español</option>
-                <option value="2">Inglés</option>
-                <option value="3">Otro</option>
+                <option value="Espanol">Español</option>
+                <option value="Ingles">Inglés</option>
+                <option value="Otro">Otro</option>
             </select>
         </div>
         <div class="col-md-6">
             <label for="inputChapters" class="form-label mb-1">Numero de capitulos</label>
-            <input type="number" class="form-control" id="inputChapters">
+            <input v-model="numeroCapitulos" type="number" class="form-control" id="inputChapters" required>
         </div>
         <div class="mb-6">
             <label for="basic-url" class="form-label mb-1">Enlace de compra</label>
             <div class="input-group">
                 <span class="input-group-text" id="basic-addon3">URL</span>
-                <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3 basic-addon4">
+                <input v-model="url" type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3 basic-addon4">
             </div>
         </div>
         <div class="select-status"> La serie se encuentra finalizada:
@@ -60,8 +60,12 @@
             <label for="formFile" class="form-label">Portada</label>
             <input class="form-control" type="file" id="formFile">
         </div>
+        <div class="mb-3">
+            <label for="sinopsis" class="form-label mb-1">Sinopsis</label>
+            <textarea v-model="sinopsis" class="form-control" id="sinopsis" rows="3"></textarea>
+        </div>
         <div class="save-button">
-            <button type="button" alt = " " aria-label="">
+            <button type="button" @click="guardarFormulario" aria-label="Guardar">
             Guardar
             </button>
         </div>
@@ -71,7 +75,32 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
-const birthdate = ref('');
+const titulo = ref('');
+const autor = ref('');
+const editorial = ref('');
+const fechaPublicacion = ref('');
+const idioma = ref('');
+const numeroCapitulos = ref('');
+const url = ref('');
+const serieFinalizada = ref('');
+const sinopsis = ref('');
+
+const emit = defineEmits(['guardar']);
+
+function guardarFormulario() {
+    const datos = {
+        titulo: titulo.value,
+        autor: autor.value,
+        editorial: editorial.value,
+        fechaPublicacion: fechaPublicacion.value,
+        idioma: idioma.value,
+        numeroCapitulos: numeroCapitulos.value,
+        url: url.value,
+        serieFinalizada: serieFinalizada.value,
+        sinopsis: sinopsis.value
+    };
+    emit('guardar', datos);
+}
 </script>
 
 <style scoped>

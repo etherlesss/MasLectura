@@ -79,15 +79,26 @@ function enviarTodo() {
   };
 
   
-  fetch('/api/libros', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(datosCompletos)
-  })
-  .then(res => res.json())
-  .then(data => {
+  async function enviarTodo() {
+  try {
+    const response = await fetch('/api/libros', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(datosCompletos)
+    });
+
+    // Verificar si la respuesta fue exitosa
+    if (!response.ok) {
+      throw new Error(`Error en la petición: ${response.status}`);
+    }
+
+    const data = await response.json();
     console.log("Guardado correctamente", data);
-  });
+  } catch (error) {
+    console.error("Ocurrió un error:", error);
+    alert("Ocurrió un error al guardar los datos. Por favor, intente nuevamente.");
+  }
+    }
 }
 </script>
     
