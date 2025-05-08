@@ -35,10 +35,9 @@
                         <span class="arrow">▼</span>
                     </div>
                     <ul v-if="dropdownOpen" class="dropdown-menu">
-                        <li><RouterLink to="/profile">Perfil</RouterLink></li>
+                        <li><RouterLink to="/my-profile">Perfil</RouterLink></li>
                         <li><RouterLink to="/addBook">Agregar lectura</RouterLink></li>
                         <li><button @click="logout" class="logout-btn">Cerrar sesión</button></li>
-                      
                     </ul>
                 </li>
             </ul>

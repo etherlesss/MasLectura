@@ -10,6 +10,7 @@ from db import init_mysql
 # Importar rutas
 from routes.login import login_bp
 from routes.signup import signup_bp
+from routes.profile import profile_bp
 
 # Cargar variables de entorno
 load_dotenv()
@@ -47,6 +48,7 @@ def test_db():
 # Registrar blueprints
 app.register_blueprint(login_bp, url_prefix='/api')
 app.register_blueprint(signup_bp, url_prefix='/api')
+app.register_blueprint(profile_bp, url_prefix='/api')
 
 # Mensaje de encendido del servidor backend
 if __name__ == "__main__":

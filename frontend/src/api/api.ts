@@ -30,6 +30,10 @@ async function GETRequest(endpoint: string) {
     }
 }
 
+export async function getProfile(id_usuario: number) {
+    return GETRequest(`/profile/${id_usuario}`);
+}
+
 /*
     POST
 */
