@@ -26,7 +26,6 @@ import Footer from '@/components/pageFooter/Footer.vue';
 .test img{
   width: 100%  ;
   height: 100% ;
-  align-items: center;
 }
 
 .body{
