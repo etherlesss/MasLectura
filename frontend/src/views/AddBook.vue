@@ -71,15 +71,13 @@ function guardarThirdForm(data: any) {
   thirdFormData.value = data;
 }
 
-function enviarTodo() {
+async function enviarTodo() {
   const datosCompletos = {
     ...firstFormData.value,
     ...secondFormData.value,
     ...thirdFormData.value
   };
 
-  
-  async function enviarTodo() {
   try {
     const response = await fetch('/api/libros', {
       method: 'POST',
@@ -87,7 +85,6 @@ function enviarTodo() {
       body: JSON.stringify(datosCompletos)
     });
 
-    // Verificar si la respuesta fue exitosa
     if (!response.ok) {
       throw new Error(`Error en la petición: ${response.status}`);
     }
@@ -98,8 +95,8 @@ function enviarTodo() {
     console.error("Ocurrió un error:", error);
     alert("Ocurrió un error al guardar los datos. Por favor, intente nuevamente.");
   }
-    }
 }
+
 </script>
     
 <style scoped>

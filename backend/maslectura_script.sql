@@ -37,11 +37,20 @@ CREATE TABLE Libro (
     id_usuario INT NOT NULL,
     titulo VARCHAR(255) NOT NULL,
     autor VARCHAR(255) NOT NULL,
+    artista VARCHAR(255),
     fecha_publicacion DATE NOT NULL,
     portada VARCHAR(255),
+    estado VARCHAR(255) NOT NULL,
+    link_compra VARCHAR(1024),
     promedio DECIMAL(2, 1) NOT NULL, -- maximo 2 digitos de numero, 1 digito decimal
-    tipo_libro VARCHAR(255) NOT NULL,
+    tipo VARCHAR(255) NOT NULL,
     editorial VARCHAR(255) NOT NULL,
+    idioma VARCHAR(255) NOT NULL,
+    es_saga VARCHAR(255) NOT NULL,
+    titulo_saga VARCHAR(255),
+    num_libro INT,
+    num_capitulos INT,
+    sinopsis VARCHAR(1024) NOT NULL,
 	CONSTRAINT libro_fk FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario)
 );
 
