@@ -17,18 +17,20 @@
                 <label for="pwd" class="form-label mb-1">Contraseña</label>
                 <input v-model="pwd" type="password" class="form-control" id="pwd" placeholder="contraseña" required>
                 <!-- Recuperar constraseña -->
-                <p class="mt-2 float-end">Olvidaste tu contraseña? Recupérala <a href="#" class="link-styled">aquí</a>.</p>
+                <p class="mt-2 float-end">Olvidaste tu contraseña? Recupérala <a href="#" class="link-styled" data-bs-toggle="modal" data-bs-target="#recover-modal">aquí</a>.</p>
             </div>
         </div>
         <!-- Boton de inicio de sesion -->
         <button type="submit" class="btn ml-primary-btn float-end">Iniciar sesión</button>
     </form>
+    <RecoveryMailModal />
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useAuthStore } from '@/stores/token';
 import { login } from '@/api/api';
+import RecoveryMailModal from '../modal/RecoveryMailModal.vue';
 
 const mail = ref<string>('');
 const pwd = ref<string>('');
@@ -51,11 +53,11 @@ const handleSubmit = async () => {
         }
 
         // Verificar acceso
-        if (res.token) {
+        if (res.data.token) {
             // Obtener token
-            const token = res.token;
+            const token = res.data.token;
             // Obtener datos del usuario
-            const user = res.user;
+            const user = res.data.user;
             // Obtener fecha de expiración del token
             const expDate = new Date(res.expDate);
 

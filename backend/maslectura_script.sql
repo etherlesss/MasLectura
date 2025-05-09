@@ -9,7 +9,8 @@ CREATE TABLE Usuario (
     contrasenia VARCHAR(255) NOT NULL, -- HASH
     genero_usuario VARCHAR(50) NOT NULL,
     rol VARCHAR(50) NOT NULL,
-    fecha_nacimiento DATE NOT NULL
+    fecha_nacimiento DATE NOT NULL,
+    token_recuperacion VARCHAR(32) NOT NULL
 );
 
 CREATE TABLE Genero (

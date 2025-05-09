@@ -23,7 +23,7 @@ const config = {
 async function GETRequest(endpoint: string) {
     try {
         const res = await axios.get(url + endpoint, config);
-        return res.data;
+        return res;
     } catch (err: any) {
         console.error('GET request error:', err.response);
         return err.response;
@@ -40,7 +40,7 @@ export async function getProfile(id_usuario: number) {
 async function POSTRequest(endpoint: string, data: any) {
     try {
         const res = await axios.post(url + endpoint, data, config);
-        return res.data;
+        return res;
     } catch (err: any) {
         console.error('POST request error:', err.response);
         return err.response;
@@ -61,11 +61,19 @@ export async function signup(data: any) {
 async function PATCHRequest(endpoint: string, data: any) {
     try {
         const res = await axios.patch(url + endpoint, data, config);
-        return res.data;
+        return res;
     } catch (err: any) {
         console.error('PATCH request error:', err.response);
         return err.response;
     }
+}
+
+export async function recoverPassword(mail: string) {
+    return PATCHRequest('/recover-password', { mail });
+}
+
+export async function resetPassword(token: string, pwd: string) {
+    return PATCHRequest('/reset-password', { token, pwd });
 }
 
 /*
@@ -77,7 +85,7 @@ async function DELETERequest(endpoint: string, data: any = {}) {
         ...config,
         data: data
         });
-        return res.data;
+        return res;
     } catch (err: any) {
         console.error('DELETE request error:', err.response);
         return err.response;
