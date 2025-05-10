@@ -40,6 +40,11 @@ const router = createRouter({
       path: '/recover-password/token=:token',
       name: 'recover-password',
       component: () => import('../views/PwdRecoveryView.vue'),
+    },
+    {
+      path: '/my-profile/edit',
+      name: 'edit-profile',
+      component: () => import('../views/ProfileEditView.vue'),
     }
   ],
 })

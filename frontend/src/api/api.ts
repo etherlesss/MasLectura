@@ -76,6 +76,10 @@ export async function resetPassword(token: string, pwd: string) {
     return PATCHRequest('/reset-password', { token, pwd });
 }
 
+export async function updateProfile(id_usuario: number, data: any) {
+    return PATCHRequest(`/profile/${id_usuario}`, data);
+}
+
 /*
     DELETE
 */

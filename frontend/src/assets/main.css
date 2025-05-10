@@ -30,3 +30,12 @@ body, html {
   color: #af694e;
   text-decoration: underline;
 }
+
+.subtle-link-styled {
+  color: #262322;
+  text-decoration: none;
+}
+
+.subtle-link-styled:hover {
+  text-decoration: underline;
+}

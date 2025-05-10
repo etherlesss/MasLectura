@@ -2,7 +2,13 @@
     <Navbar />
     <main class="p-5">
         <div class="mb-5">
-            <h1>Mi perfil</h1>
+            <div class="d-flex gap-2">
+                <h1>Mi perfil</h1>
+                <router-link to="/my-profile/edit" class="d-flex align-items-center gap-2 subtle-link-styled">
+                    <i class="bi bi-pencil"></i>
+                    <p>Editar</p>
+                </router-link>
+            </div>
             <div>
                 <p><b>Nombre de usuario:</b> {{ user?.nombre_usuario }}</p>
                 <p><b>Correo electrónico:</b> {{ user?.mail_usuario }}</p>
@@ -33,7 +39,8 @@ const authStore = useAuthStore();
 // Obtener los datos del usuario desde API
 async function fetchUser() {
     try {
-        user.value = await getProfile(authStore.user.id);
+        const res = await getProfile(authStore.user.id);
+        user.value = res.data;
     } catch (err) {
         console.error('Error fetching user:', err);
     }
