@@ -46,6 +46,24 @@ def signup():
         cur.execute("INSERT INTO Usuario (nombre_usuario, mail_usuario, contrasenia, genero_usuario, rol, fecha_nacimiento) VALUES (%s, %s, %s, %s, 'Usuario', %s)", (username, mail, pwdHash, gender, bdate,))
         mysql.connection.commit()
 
+        # Obtener el id del nuevo usuario
+        cur.execute("SELECT id_usuario FROM Usuario WHERE mail_usuario = %s", (mail,))
+        user = cur.fetchone()
+        
+        # Definir listas por defecto
+        default_lists = [
+            ('Leído', 'Esta lista contiene los libros que has leído.'),
+            ('Leyendo', 'Esta lista contiene los libros que estás leyendo actualmente.'),
+            ('Quiero leer', 'Esta lista contiene los libros que planeas leer.')
+        ]
+
+        # Insertar las listas predeterminadas al nuevo usuario
+        cur.executemany(
+            "INSERT INTO Lista (id_usuario, nombre_lista, descripcion) VALUES (%s, %s, %s)",
+            [(user['id_usuario'], nombre_lista, descripcion) for nombre_lista, descripcion in default_lists]
+        )
+        mysql.connection.commit()
+
         # Respuesta de éxito
         return jsonify({'message': 'Usuario registrado exitosamente'}), 201
     except Exception as err:
