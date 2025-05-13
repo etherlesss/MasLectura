@@ -1,5 +1,14 @@
 # Importar dependencias
 from flask import Blueprint, jsonify, request
+from dotenv import load_dotenv
+import bcrypt
+import os
+
+# Cargar variables de entorno
+load_dotenv()
+
+# Definir variables
+SALT_ROUNDS = os.getenv("SALT_ROUNDS")
 
 # Crear un objeto Blueprint para la ruta de perfil
 profile_bp = Blueprint('profile', __name__)
@@ -58,6 +67,44 @@ def updateProfile(id_usuario):
         return jsonify({'message': 'Perfil actualizado correctamente'}), 200
     except Exception as err:
         print(f"Error al actualizar el perfil del usuario: {err}")
+        return jsonify({'message': 'Error interno del servidor'}), 500
+    finally:
+        # Cerrar el cursor
+        if cur: cur.close()
+
+# Cambiar la contraseña del usuario
+@profile_bp.route('/profile/<int:id_usuario>/change-password', methods=['PATCH'])
+def updatePwd(id_usuario):
+    from app import mysql
+    cur = None
+    try:
+        # Obtener la conexion a la base de datos
+        cur = mysql.connection.cursor()
+
+        # Obtener los datos del usuario
+        cur.execute("SELECT * FROM Usuario WHERE id_usuario = %s", (id_usuario,))
+        user = cur.fetchone()
+
+        if user is None:
+            return jsonify({'message': 'El usuario no existe'}), 404
+
+        # Obtener la nueva contraseña
+        data = request.get_json()
+
+        # Validar que la contraseña actual es correcta
+        if not bcrypt.checkpw(data['pwdCurrent'].encode('utf-8'), user['contrasenia'].encode('utf-8')):
+            return jsonify({'message': 'La contraseña actual es incorrecta'}), 401
+
+        # Hash de la nueva contraseña
+        pwdHash = bcrypt.hashpw(data['pwd'].encode('utf-8'), bcrypt.gensalt(int(SALT_ROUNDS))).decode('utf-8')
+
+        cur.execute("UPDATE Usuario SET contrasenia = %s WHERE id_usuario = %s", (pwdHash, id_usuario))
+        mysql.connection.commit()
+
+        # Respuesta de éxito
+        return jsonify({'message': 'Contraseña actualizada correctamente'}), 200
+    except Exception as err:
+        print(f"Error al actualizar la contraseña del usuario: {err}")
         return jsonify({'message': 'Error interno del servidor'}), 500
     finally:
         # Cerrar el cursor

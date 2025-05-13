@@ -80,6 +80,10 @@ export async function updateProfile(id_usuario: number, data: any) {
     return PATCHRequest(`/profile/${id_usuario}`, data);
 }
 
+export async function updatePassword(id_usuario: number, data: any) {
+    return PATCHRequest(`/profile/${id_usuario}/change-password`, data);
+}
+
 /*
     DELETE
 */

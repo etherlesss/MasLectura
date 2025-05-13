@@ -10,7 +10,8 @@ CREATE TABLE Usuario (
     genero_usuario VARCHAR(50) NOT NULL,
     rol VARCHAR(50) NOT NULL,
     fecha_nacimiento DATE NOT NULL,
-    token_recuperacion VARCHAR(32) NOT NULL
+    token_recuperacion VARCHAR(32),
+    exp_recuperacion DATETIME
 );
 
 CREATE TABLE Genero (

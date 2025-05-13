@@ -14,12 +14,14 @@
                 <p><b>Correo electrónico:</b> {{ user?.mail_usuario }}</p>
                 <p><b>Género: </b> {{ user?.genero_usuario }}</p>
                 <p><b>Fecha de nacimiento:</b> {{ formatDate(user?.fecha_nacimiento || '') }}</p>
+                <p><b>Contraseña</b> <a href="#" class="subtle-link-styled" data-bs-toggle="modal" data-bs-target="#changepwd-modal">[Cambiar]</a></p>
             </div>
         </div>
         <div>
             <h2>Mis Listas</h2>
         </div>
     </main>
+    <ChangePwdModal />
 </template>
 
 <script setup lang="ts">
@@ -29,6 +31,7 @@ import { getProfile } from '@/api/api';
 import { useAuthStore } from '@/stores/token';
 import { formatDate } from '@/util/formatters';
 import type { User } from '@/types/types';
+import ChangePwdModal from '@/components/modal/ChangePwdModal.vue';
 
 // Definir variables de datos
 const user = ref<User | null>(null);
