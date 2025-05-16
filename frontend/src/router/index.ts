@@ -45,6 +45,11 @@ const router = createRouter({
       path: '/my-profile/edit',
       name: 'edit-profile',
       component: () => import('../views/ProfileEditView.vue'),
+    },
+    {
+      path: '/my-lists/:id_lista',
+      name: 'my-lists',
+      component: () => import('../views/ListView.vue'),
     }
   ],
 })

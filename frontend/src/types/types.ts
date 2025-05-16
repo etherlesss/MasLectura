@@ -13,3 +13,25 @@ export interface List {
     nombre_lista: string;
     descripcion: string;
 }
+
+export interface Book {
+    id_libro: number;
+    id_usuario: number;
+    titulo: string;
+    autor: string;
+    artista: string;
+    anio_publicacion: string;
+    portada: string;
+    estado: string;
+    link_compra: string;
+    promedio: number;
+    tipo: string;
+    editorial: string;
+    idioma: string;
+    es_saga: string;
+    titulo_saga: string;
+    num_libro: number;
+    num_capitulos: number;
+    sinopsis: string;
+    fecha: string; // Este viene en conjunto al hacer inner join con la tabla libro_lista
+}

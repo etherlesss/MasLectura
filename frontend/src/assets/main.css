@@ -16,6 +16,15 @@ body, html {
   font-style: normal;
 }
 
+th {
+  font-weight: bold;
+  padding: 0.5rem;
+}
+
+td {
+  padding: 0.5rem;
+}
+
 .ml-primary-btn {
   background-color: #262322 !important;
   color: #ffffff !important;

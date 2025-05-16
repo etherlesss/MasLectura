@@ -33,6 +33,11 @@ async function GETRequest(endpoint: string) {
 export async function getProfile(id_usuario: number) {
     return GETRequest(`/profile/${id_usuario}`);
 }
+
+export async function getList(id_lista: number) {
+    return GETRequest(`/list/${id_lista}`);
+}
+
 export async function getTags() {
     return GETRequest('/tag');
 }
@@ -59,6 +64,10 @@ export async function getUserLists(id_usuario: number) {
 
 export async function getListFirstBook(id_lista: number) {
     return GETRequest(`/list/${id_lista}/first-book`);
+}
+
+export async function getListBooks(id_lista: number) {
+    return GETRequest(`/list/${id_lista}/books`);
 }
 
 /*

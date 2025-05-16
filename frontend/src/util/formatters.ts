@@ -9,3 +9,11 @@ export function formatDate(date: string): string {
 export function formatDateHTML(date: string): string {
     return new Date(date).toISOString().split('T')[0];
 }
+
+export function formatDateText(date: string): string {
+    return new Date(date).toLocaleDateString('es-ES', {
+        year: 'numeric',
+        month: 'short',
+        day: '2-digit',
+    });
+}

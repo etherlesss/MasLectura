@@ -1,9 +1,11 @@
 <template>
     <div class="card-scroll">
         <div v-for="list in props.lists" class="card">
-            <img :src="images[list.id_lista]" class="card-img-top pt-3 pi-3" alt="...">
+            <img :src="images[list.id_lista]" class="card-img-top pt-3 pi-3" alt="{{ list.nombre_lista }}" />
             <div class="card-body">
-                <h5 class="card-title">{{ list.nombre_lista }}</h5>
+                <router-link :to="'/my-lists/'+list.id_lista" class="subtle-link-styled">
+                    <h5 class="card-title">{{ list.nombre_lista }}</h5>
+                </router-link>
                 <p class="card-text">{{ list.descripcion }}</p>
             </div>
         </div>
