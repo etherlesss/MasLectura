@@ -14,39 +14,70 @@ def addBook():
     from app import mysql
     cur = None
     try:
-        # Obtener la conexion a la base de datos
+        # Obtener la conexión a la base de datos
         cur = mysql.connection.cursor()
 
         # Obtener los datos del libro
         data = request.get_json()
 
-        tipo = data.get('tipo')
+        # Datos del libro
+        id_usuario = data.get('id_usuario', 1)  # Por defecto, asignamos un usuario con ID 1
         titulo = data.get('titulo')
         autor = data.get('autor')
+        artista = data.get('artista')
+        anio_publicacion = data.get('anio_publicacion')
+        portada = data.get('portada', '')
+        estado = data.get('estado')
+        link_compra = data.get('link_compra')
+        promedio = data.get('promedio', 0)
+        tipo = data.get('tipo')
         editorial = data.get('editorial')
-        fecha_publicacion = data.get('fechaPublicacion')
         idioma = data.get('idioma')
-        numero_capiutlos = data.get('numeroCapitulos')
-        enlace = data.get('url')
-        finalizado = data.get('serieFinalizada')
-        portada = data.get('portada')
+        es_saga = data.get('es_saga')
+        titulo_saga = data.get('titulo_saga')
+        num_libro = data.get('num_libro')
+        num_capitulos = data.get('num_capitulos')
         sinopsis = data.get('sinopsis')
+
+
+
+        # Validar datos requeridos
+        if not titulo or not autor or not tipo or not estado or not anio_publicacion or not es_saga or not portada:
+            # Si falta alguno de los datos requeridos, devolver un error
+            return jsonify({'message': 'Faltan datos requeridos'}), 400
+        
+         # Verificar si el libro ya existe por título y autor
+        cur.execute(
+            "SELECT id_libro FROM libro WHERE titulo = %s AND autor = %s",
+            (titulo, autor)
+        )
+        libro_existente = cur.fetchone()
+        if libro_existente:
+            return jsonify({'message': 'El libro ya esta registrado en el base de datos'}), 409
 
         # Insertar el libro en la base de datos
         cur.execute(
             """
-            INSERT INTO Libro (id_usuario, titulo, autor, fecha_publicacion, portada, promedio, tipo_libro, editorial)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-            """, (1, titulo, autor, fecha_publicacion, '', 0, tipo, editorial)
+            INSERT INTO libro (
+                id_usuario, titulo, autor, artista, anio_publicacion, portada, estado, link_compra,
+                promedio, tipo, editorial, idioma, es_saga, titulo_saga, num_libro, num_capitulos, sinopsis
+            )
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            """, (
+                id_usuario, titulo, autor, artista, anio_publicacion, portada, estado, link_compra,
+                promedio, tipo, editorial, idioma, es_saga, titulo_saga, num_libro, num_capitulos, sinopsis
+            )
         )
 
+        # Obtener el ID del libro recién insertado
         mysql.connection.commit()
+        id_libro = cur.lastrowid    
 
         # Respuesta de éxito
-        return jsonify({'message': 'Libro agregado exitosamente'}), 201
+        return jsonify({'message': 'Libro guardado correctamente', 'id_libro': id_libro}), 201
     except Exception as err:
-        print(f"Error al agregar el libro: {err}")
-        return jsonify({'message': 'Error interno del servidor'}), 500
+        print(f"Error al agregar el libro: {err}")  # Muestra el error exacto en los logs
+        return jsonify({'message': f'Error interno del servidor: {str(err)}'}), 500
     finally:
         # Cerrar el cursor
         if cur: cur.close()

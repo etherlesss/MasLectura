@@ -12,6 +12,13 @@ from db import init_mysql
 from routes.login import login_bp
 from routes.signup import signup_bp
 from routes.profile import profile_bp
+from routes.genre import genre_bp
+from routes.tag import tag_bp
+from routes.book import book_bp
+from routes.book_tag import book_tag_bp
+from routes.book_genre import book_genre_bp  
+from routes.upload_image import upload_bp
+
 
 # Importar endpoints
 from endpoints.recoverpwd import recover_password_bp
@@ -21,7 +28,6 @@ load_dotenv()
 
 # Definir variables
 PORT = os.getenv("PORT") or 5000
-
 # Inicializar la aplicación Flask
 app = Flask(__name__)
 
@@ -68,6 +74,13 @@ app.register_blueprint(login_bp, url_prefix='/api')
 app.register_blueprint(signup_bp, url_prefix='/api')
 app.register_blueprint(profile_bp, url_prefix='/api')
 app.register_blueprint(recover_password_bp, url_prefix='/api')
+app.register_blueprint(genre_bp, url_prefix='/api')
+app.register_blueprint(tag_bp, url_prefix='/api')
+app.register_blueprint(book_bp, url_prefix='/api')
+app.register_blueprint(book_tag_bp, url_prefix='/api')
+app.register_blueprint(book_genre_bp, url_prefix='/api')
+app.register_blueprint(upload_bp, url_prefix='/api')
+
 
 # Mensaje de encendido del servidor backend
 if __name__ == "__main__":

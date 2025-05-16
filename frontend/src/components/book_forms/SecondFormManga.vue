@@ -3,7 +3,7 @@
         2. Ingresar datos del manga
     </h6>
     <br>
-    <form class="row g-3">
+    <form @submit.prevent class="row g-3">
         <div class="col-md-6">
             <label for="inputTittle" class="form-label mb-1">Titulo</label>
             <input v-model="titulo" type="text" class="form-control" id="inputTittle" required>
@@ -21,8 +21,16 @@
             <input v-model="editorial" type="text" class="form-control" id="inputEditorial" required>
         </div>
         <div class="col-md-6">
-            <label for="inputPublication" class="form-label mb-1">Fecha de publicacion</label>
-            <input v-model="fechaPublicacion" type="date" class="form-control" id="inputPublication" required>
+            <label for="anio" class="form-label mb-1">Año de publicación</label>
+            <input 
+                v-model="anio" 
+                type="number" 
+                class="form-control" 
+                id="anio" 
+                min="1000" 
+                max="9999"
+                required
+            >
         </div>
         <div class="col-md-6">
             <label for="inputIdioma" class="form-label mb-1">Idioma</label>
@@ -41,7 +49,7 @@
             <label for="basic-url" class="form-label mb-1">Enlace de compra</label>
             <div class="input-group">
                 <span class="input-group-text" id="basic-addon3">URL</span>
-                <input v-model="url" type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3 basic-addon4" required>
+                <input v-model="urlCompra" type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3 basic-addon4" required>
             </div>
         </div>
         <div class="select-status">
@@ -60,9 +68,9 @@
                 </label>
             </div>
         </div>
-        <div class="mb-3">
-            <label for="formFile" class="form-label">Portada</label>
-            <input class="form-control" type="file" id="formFile" required>
+        <div class="mb-6">
+            <label for="portada" class="form-label mb-1">Portada</label>
+            <input @change="onFileChange" type="file" class="form-control" id="portada" accept="image/*">
         </div>
         <div class="mb-3">
             <label for="sinopsis" class="form-label mb-1">Sinopsis</label>
@@ -73,43 +81,111 @@
                 Guardar
             </button>
         </div>
+        <div v-if="mensaje" :class="mensaje === '¡Guardado correctamente!' ? 'mensaje-guardado' : 'mensaje-error'">
+            {{ mensaje }}
+        </div>
     </form>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-
+import { ref, computed } from 'vue';
+import { uploadImage } from '@/api/api';
 
 const titulo = ref('');
 const autor = ref('');
 const artista = ref('');
 const editorial = ref('');
-const fechaPublicacion = ref('');
+const anio = ref('');
 const idioma = ref('');
 const numeroCapitulos = ref('');
-const url = ref('');
+const urlCompra = ref('');
 const serieFinalizada = ref('');
-const portada = ref('');
 const sinopsis= ref('');
-
-
+const portadaFile = ref<File|null>(null);
+const urlPortada = ref('');
+const mensaje = ref('');
 const emit = defineEmits(['guardar']);
 
-function guardarFormulario() {
-  const datos = {
-    titulo: titulo.value,
-    autor: autor.value,
-    artista: artista.value,
-    editorial: editorial.value,
-    fechaPublicacion: fechaPublicacion.value,
-    idioma: idioma.value,
-    numeroCapitulos: numeroCapitulos.value,
-    url: url.value,
-    serieFinalizada: serieFinalizada.value,
-    portada: portada.value,
-    sinopsis: sinopsis.value
-  };
-  emit('guardar', datos); 
+// Computed para validar campos requeridos
+const camposRequeridosCompletos = computed(() =>
+    titulo.value.trim() !== '' &&
+    autor.value.trim() !== '' &&
+    artista.value.trim() !== '' &&
+    idioma.value.trim() !== '' &&
+    sinopsis.value.trim() !== '' &&
+    portadaFile.value !== null
+);
+function onFileChange(event: Event) {
+    const files = (event.target as HTMLInputElement).files;
+    console.log('onFileChange triggered');
+    if (files && files.length > 0) {
+        portadaFile.value = files[0];
+        console.log('Archivo seleccionado:', portadaFile.value);
+    } else {
+        console.log('No se seleccionó ningún archivo');
+    }
+}
+async function subirImagen() {
+    console.log('Entrando a subirImagen');
+    if (!portadaFile.value) {
+        console.log('No hay archivo de portada para subir');
+        return;
+    }
+    const formData = new FormData();
+    formData.append('imagen', portadaFile.value);
+    console.log('FormData preparado para enviar:', formData);
+
+    try {
+        console.log('Enviando axios a /api/upload_image...');
+        const response = await uploadImage(formData);
+        console.log('Respuesta recibida de /api/upload_image:', response);
+
+        if (!response || response.status !== 201) {
+            console.error('Error al subir la imagen. Status:', response?.status);
+            alert('Error al subir la imagen');
+            return;
+        }
+        const data = response.data;
+        console.log('Respuesta JSON de la subida:', data);
+        urlPortada.value = data.url;
+        console.log('URL de portada guardada:', urlPortada.value);
+    } catch (error) {
+        console.error('Excepción en subirImagen:', error);
+        alert('Error inesperado al subir la imagen');
+    }
+}
+async function guardarFormulario() {
+    try{
+        if (!camposRequeridosCompletos.value) {
+            mensaje.value = 'Por favor, completa todos los campos requeridos.';
+            setTimeout(() => {
+             mensaje.value = '';
+            }, 2500);
+            return;
+        }
+        await subirImagen();
+        const datos = {
+        titulo: titulo.value,
+        autor: autor.value,
+        artista: artista.value,
+        anio_publicacion: anio.value,
+        portada: urlPortada.value,  
+        estado: serieFinalizada.value,
+        link_compra: urlCompra.value,
+        editorial: editorial.value, 
+        idioma: idioma.value,
+        es_saga: 'N/A',
+        num_capitulos: numeroCapitulos.value,
+        sinopsis: sinopsis.value
+        
+    };
+    console.log('Datos enviados:', datos);
+    emit('guardar', datos); 
+  
+    mensaje.value = '¡Guardado correctamente!';
+    } catch (e) {
+        mensaje.value = 'Ocurrió un error al guardar.';
+    }
 }
 </script>
 
@@ -118,5 +194,29 @@ function guardarFormulario() {
   display: flex;
   justify-content: center;
   margin-top: 2rem;
+}
+
+.mensaje-guardado {
+  text-align: center;
+  margin-top: 1rem;
+  color: #155724;
+  background: #d4edda;
+  border: 1px solid #c3e6cb;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  transition: opacity 0.3s;
+}
+
+.mensaje-error {
+  text-align: center;
+  margin-top: 1rem;
+  color: #721c24;
+  background: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  transition: opacity 0.3s;
 }
 </style>

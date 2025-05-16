@@ -33,6 +33,25 @@ async function GETRequest(endpoint: string) {
 export async function getProfile(id_usuario: number) {
     return GETRequest(`/profile/${id_usuario}`);
 }
+export async function getTags() {
+    return GETRequest('/tag');
+}
+
+export async function getBook(id: number) {
+    return GETRequest(`/book/${id}`);
+}
+export async function getGenres() {
+    return GETRequest('/genre');
+}
+export async function geBookGenres() {
+    return GETRequest('/book_genre');
+}
+export async function getBookTags() {
+    return GETRequest('/book_tag');
+}
+export async function getBooks() {
+    return GETRequest('/book');
+}
 
 /*
     POST
@@ -53,6 +72,45 @@ export async function login(data: any) {
 
 export async function signup(data: any) {
     return POSTRequest('/signup', data);
+}
+
+export async function addBookTag(data: any) {
+    return POSTRequest('/book_tag', data);
+}
+
+export async function addBook(data: any) {
+    return POSTRequest('/book', data);
+}
+
+export async function addBookGenre(data: any) {
+    return POSTRequest('/book_genre', data);
+}
+
+export async function addGenre(data: any) {
+    return POSTRequest('/genre', data);
+}
+
+export async function addTag(data: any) {
+    return POSTRequest('/tag', data);
+}
+
+export async function uploadImage(formData: FormData) {
+    try {
+        const res = await axios.post(
+            url + '/upload_image',
+            formData,
+            {
+                headers: {
+                    // Axios detecta FormData y pone el boundary automáticamente
+                    'Authorization': token ? `Bearer ${token}` : '',
+                }
+            }
+        );
+        return res;
+    } catch (err: any) {
+        console.error('POST uploadImage error:', err.response);
+        return err.response;
+    }
 }
 
 /*
