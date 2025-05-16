@@ -4,10 +4,10 @@
         <div>
             <div class="d-flex align-items-center gap-2">
                 <h1>{{ list?.nombre_lista }}</h1>
-                <EditListModal
-                    v-if="list && list.nombre_lista !== 'Leído' && list.nombre_lista !== 'Quiero leer' && list.nombre_lista !== 'Leyendo'"
-                    :list="list"
-                />
+                <div v-if="list && list.nombre_lista !== 'Leído' && list.nombre_lista !== 'Quiero leer' && list.nombre_lista !== 'Leyendo'" class="d-flex align-items-center gap-2">
+                    <EditListModal :list="list" />
+                    <a href="#" class="subtle-link-styled" @click="removeList(list?.id_lista)">[Eliminar]</a>
+                </div>
             </div>
             <p>{{ list?.descripcion }}</p>
         </div>
@@ -21,7 +21,7 @@
 import Navbar from '@/components/nav/Navbar.vue';
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import { getList, getListBooks } from '@/api/api';
+import { deleteList, getList, getListBooks } from '@/api/api';
 import type { Book, List } from '@/types/types';
 import ListBookTable from '@/components/table/ListBookTable.vue';
 import EditListModal from '@/components/modal/EditListModal.vue';
@@ -53,6 +53,19 @@ async function fetchListBooks() {
         }
     } catch (err) {
         console.error('Error fetching list books:', err);
+    }
+}
+
+// Eliminar la lista
+async function removeList(listID: number) {
+    try {
+        const res = await deleteList(listID);
+        if (res.status !== 200) {
+            alert('Ocurrió un error al eliminar la lista.');
+        }
+        window.location.href = '/my-profile';
+    } catch (err) {
+        console.error('Error removing list:', err);
     }
 }
 

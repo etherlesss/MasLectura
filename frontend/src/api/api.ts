@@ -186,3 +186,7 @@ async function DELETERequest(endpoint: string, data: any = {}) {
 export async function removeBookFromList(id_lista: number, id_libro: number) {
     return DELETERequest(`/list/${id_lista}/book/${id_libro}`);
 }
+
+export async function deleteList(id_lista: number) {
+    return DELETERequest(`/list/${id_lista}`);
+}

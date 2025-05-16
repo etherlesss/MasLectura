@@ -158,3 +158,25 @@ def deleteBookFromList(id_lista, id_libro):
     finally:
         # Cerrar el cursor
         if cur: cur.close()
+
+# Eliminar lista
+@list_bp.route('/list/<int:id_lista>', methods=['DELETE'])
+def deleteList(id_lista):
+    from app import mysql
+    cur = None
+    try:
+        # Obtener la conexion a la base de datos
+        cur = mysql.connection.cursor()
+
+        # Eliminar la lista
+        cur.execute("DELETE FROM Lista WHERE id_lista = %s", (id_lista,))
+        mysql.connection.commit()
+
+        # Respuesta de éxito
+        return jsonify({'message': 'Lista eliminada exitosamente'}), 200
+    except Exception as err:
+        print(f"Error al eliminar la lista: {err}")
+        return jsonify({'message': 'Error interno del servidor'}), 500
+    finally:
+        # Cerrar el cursor
+        if cur: cur.close()
