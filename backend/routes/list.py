@@ -72,7 +72,7 @@ def getBooks(id_lista):
         books = cur.fetchall()
 
         if not books:
-            return 404
+            return jsonify({'message': 'No hay libros en la lista'}), 404
 
         # Respuesta de éxito
         return jsonify(books), 200
@@ -103,6 +103,57 @@ def createList():
         return jsonify({'message': 'Lista creada exitosamente'}), 201
     except Exception as err:
         print(f"Error al crear la lista: {err}")
+        return jsonify({'message': 'Error interno del servidor'}), 500
+    finally:
+        # Cerrar el cursor
+        if cur: cur.close()
+
+# Editar lista
+@list_bp.route('/list/<int:id_lista>', methods=['PATCH'])
+def editList(id_lista):
+    from app import mysql
+    cur = None
+    try:
+        # Obtener la conexion a la base de datos
+        cur = mysql.connection.cursor()
+
+        # Obtener los datos de la lista
+        data = request.get_json()
+
+        # Enviar no autorizado si la lista es 'Leído', 'Leyendo' o 'Quiero leer'
+        if data['nombre_lista'] in ['Leído', 'Leyendo', 'Quiero leer']:
+            return 401
+
+        # Actualizar la lista en la base de datos
+        cur.execute("UPDATE Lista SET nombre_lista = %s, descripcion = %s WHERE id_lista = %s", (data['nombre_lista'], data['descripcion'], id_lista))
+        mysql.connection.commit()
+
+        # Respuesta de éxito
+        return jsonify({'message': 'Lista editada exitosamente'}), 200
+    except Exception as err:
+        print(f"Error al editar la lista: {err}")
+        return jsonify({'message': 'Error interno del servidor'}), 500
+    finally:
+        # Cerrar el cursor
+        if cur: cur.close()
+
+# Eliminar libro de lista
+@list_bp.route('/list/<int:id_lista>/book/<int:id_libro>', methods=['DELETE'])
+def deleteBookFromList(id_lista, id_libro):
+    from app import mysql
+    cur = None
+    try:
+        # Obtener la conexion a la base de datos
+        cur = mysql.connection.cursor()
+
+        # Eliminar el libro de la lista
+        cur.execute("DELETE FROM Libro_Lista WHERE id_lista = %s AND id_libro = %s", (id_lista, id_libro))
+        mysql.connection.commit()
+
+        # Respuesta de éxito
+        return jsonify({'message': 'Libro eliminado de la lista exitosamente'}), 200
+    except Exception as err:
+        print(f"Error al eliminar el libro de la lista: {err}")
         return jsonify({'message': 'Error interno del servidor'}), 500
     finally:
         # Cerrar el cursor

@@ -163,6 +163,10 @@ export async function updatePassword(id_usuario: number, data: any) {
     return PATCHRequest(`/profile/${id_usuario}/change-password`, data);
 }
 
+export async function updateList(id_lista: number, data: any) {
+    return PATCHRequest(`/list/${id_lista}`, data);
+}
+
 /*
     DELETE
 */
@@ -177,4 +181,8 @@ async function DELETERequest(endpoint: string, data: any = {}) {
         console.error('DELETE request error:', err.response);
         return err.response;
     }
+}
+
+export async function removeBookFromList(id_lista: number, id_libro: number) {
+    return DELETERequest(`/list/${id_lista}/book/${id_libro}`);
 }

@@ -28,7 +28,7 @@
                         {{ formatDateText(book.fecha) }}
                     </td>
                     <td>
-                        <i class="bi bi-x-lg"></i>
+                        <i class="bi bi-x-lg" @click="removeBook(book.id_libro)"></i>
                     </td>
                 </tr>
             </tbody>
@@ -37,11 +37,26 @@
 </template>
 
 <script setup lang="ts">
+import { removeBookFromList } from '@/api/api';
 import { formatDateText } from '@/util/formatters';
 import type { Book } from '@/types/types';
 
 // Definir props
-const props = defineProps<{ books: Book[] }>();
+const props = defineProps<{ books: Book[], listID: number }>();
+
+// Eliminar un libro de la lista
+async function removeBook(bookID: number) {
+    try {
+        const res = await removeBookFromList(props.listID, bookID);
+        if (res.status !== 200) {
+            alert('Ocurrió un error al eliminar el libro de la lista.');
+        }
+        // Recargar la página
+        window.location.reload();
+    } catch (err) {
+        console.error('Error removing book from list:', err);
+    }
+}
 </script>
 
 <style scoped>
@@ -49,5 +64,9 @@ td img {
     height: 6rem;
     object-fit: contain;
     aspect-ratio: 1/1.6;
+}
+
+i {
+    cursor: pointer;
 }
 </style>

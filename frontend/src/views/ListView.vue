@@ -2,11 +2,17 @@
     <Navbar />
     <main class="p-5">
         <div>
-            <h1>{{ list?.nombre_lista }}</h1>
+            <div class="d-flex align-items-center gap-2">
+                <h1>{{ list?.nombre_lista }}</h1>
+                <EditListModal
+                    v-if="list && list.nombre_lista !== 'Leído' && list.nombre_lista !== 'Quiero leer' && list.nombre_lista !== 'Leyendo'"
+                    :list="list"
+                />
+            </div>
             <p>{{ list?.descripcion }}</p>
         </div>
         <div>
-            <ListBookTable :books="books" />
+            <ListBookTable :books="books" :listID="listID" />
         </div>
     </main>
 </template>
@@ -18,6 +24,7 @@ import { useRoute } from 'vue-router';
 import { getList, getListBooks } from '@/api/api';
 import type { Book, List } from '@/types/types';
 import ListBookTable from '@/components/table/ListBookTable.vue';
+import EditListModal from '@/components/modal/EditListModal.vue';
 
 // Definir variables de datos
 const list = ref<List | null>(null);
@@ -41,12 +48,15 @@ async function fetchList() {
 async function fetchListBooks() {
     try {
         const res = await getListBooks(listID);
-        books.value = res.data;
+        if (res.status === 200) {
+            books.value = res.data;
+        }
     } catch (err) {
         console.error('Error fetching list books:', err);
     }
 }
 
+// Ejecutar funciones al montar el componente
 onMounted(async() => {
     await fetchList();
     await fetchListBooks();
