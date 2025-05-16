@@ -19,6 +19,7 @@
         </div>
         <div>
             <h2>Mis Listas</h2>
+            <ListCard :lists="lists" />
         </div>
     </main>
     <ChangePwdModal />
@@ -26,15 +27,17 @@
 
 <script setup lang="ts">
 import Navbar from '@/components/nav/Navbar.vue';
+import ChangePwdModal from '@/components/modal/ChangePwdModal.vue';
 import { onMounted, ref } from 'vue';
-import { getProfile } from '@/api/api';
+import { getProfile, getUserLists } from '@/api/api';
 import { useAuthStore } from '@/stores/token';
 import { formatDate } from '@/util/formatters';
-import type { User } from '@/types/types';
-import ChangePwdModal from '@/components/modal/ChangePwdModal.vue';
+import type { User, List } from '@/types/types';
+import ListCard from '@/components/cards/ListCard.vue';
 
 // Definir variables de datos
 const user = ref<User | null>(null);
+const lists = ref<List[]>([]);
 
 // Obtener el ID del usuario desde el almacenamiento local
 const authStore = useAuthStore();
@@ -49,9 +52,20 @@ async function fetchUser() {
     }
 }
 
+// Obtener las listas del usuario desde API
+async function fetchUserLists() {
+    try {
+        const res = await getUserLists(authStore.user.id);
+        lists.value = res.data;
+    } catch (err) {
+        console.error('Error fetching user lists:', err);
+    }
+}
+
 // Ejecutar funciones al montar el componente
 onMounted(async () => {
     await fetchUser();
+    await fetchUserLists();
 });
 </script>
 

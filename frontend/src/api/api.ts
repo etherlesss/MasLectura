@@ -53,6 +53,14 @@ export async function getBooks() {
     return GETRequest('/book');
 }
 
+export async function getUserLists(id_usuario: number) {
+    return GETRequest(`/profile/${id_usuario}/lists`);
+}
+
+export async function getListFirstBook(id_lista: number) {
+    return GETRequest(`/list/${id_lista}/first-book`);
+}
+
 /*
     POST
 */

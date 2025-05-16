@@ -18,7 +18,7 @@ from routes.book import book_bp
 from routes.book_tag import book_tag_bp
 from routes.book_genre import book_genre_bp  
 from routes.upload_image import upload_bp
-
+from routes.list import list_bp
 
 # Importar endpoints
 from endpoints.recoverpwd import recover_password_bp
@@ -80,7 +80,7 @@ app.register_blueprint(book_bp, url_prefix='/api')
 app.register_blueprint(book_tag_bp, url_prefix='/api')
 app.register_blueprint(book_genre_bp, url_prefix='/api')
 app.register_blueprint(upload_bp, url_prefix='/api')
-
+app.register_blueprint(list_bp, url_prefix='/api')
 
 # Mensaje de encendido del servidor backend
 if __name__ == "__main__":

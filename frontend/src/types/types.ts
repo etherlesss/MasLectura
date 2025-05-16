@@ -6,3 +6,10 @@ export interface User {
     rol: string;
     fecha_nacimiento: string;
 }
+
+export interface List {
+    id_lista: number;
+    id_usuario: number;
+    nombre_lista: string;
+    descripcion: string;
+}

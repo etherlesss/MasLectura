@@ -42,6 +42,31 @@ def getProfile(id_usuario):
         # Cerrar el cursor
         if cur: cur.close()
 
+# Obtener las listas del usuario por id
+@profile_bp.route('/profile/<int:id_usuario>/lists', methods=['GET'])
+def getLists(id_usuario):
+    from app import mysql
+    cur = None
+    try:
+        # Obtener la conexion a la base de datos
+        cur = mysql.connection.cursor()
+
+        # Obtener las listas del usuario
+        cur.execute("SELECT * FROM Lista WHERE id_usuario = %s", (id_usuario,))
+        lists = cur.fetchall()
+
+        if not lists:
+            return jsonify({'message': 'El usuario no tiene listas'}), 404
+
+        # Respuesta de éxito
+        return jsonify(lists), 200
+    except Exception as err:
+        print(f"Error al obtener lista(s) del usuario: {err}")
+        return jsonify({'message': 'Error interno del servidor'}), 500
+    finally:
+        # Cerrar el cursor
+        if cur: cur.close()
+
 # Actualizar los datos del usuario
 @profile_bp.route('/profile/<int:id_usuario>', methods=['PATCH'])
 def updateProfile(id_usuario):
