@@ -102,6 +102,10 @@ export async function addTag(data: any) {
     return POSTRequest('/tag', data);
 }
 
+export async function createList(data: any) {
+    return POSTRequest('/list', data);
+}
+
 export async function uploadImage(formData: FormData) {
     try {
         const res = await axios.post(

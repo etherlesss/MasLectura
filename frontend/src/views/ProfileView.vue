@@ -2,11 +2,10 @@
     <Navbar />
     <main class="p-5">
         <div class="mb-5">
-            <div class="d-flex gap-2">
+            <div class="d-flex align-items-center gap-2">
                 <h1>Mi perfil</h1>
-                <router-link to="/my-profile/edit" class="d-flex align-items-center gap-2 subtle-link-styled">
-                    <i class="bi bi-pencil"></i>
-                    <p>Editar</p>
+                <router-link to="/my-profile/edit" class="subtle-link-styled">
+                    <p>[Editar]</p>
                 </router-link>
             </div>
             <div>
@@ -18,7 +17,10 @@
             </div>
         </div>
         <div>
-            <h2>Mis Listas</h2>
+            <div class="d-flex align-items-center gap-2">
+                <h2>Mis Listas</h2>
+                <CreateListModal :userID="authStore.user.id" />
+            </div>
             <ListCard :lists="lists" />
         </div>
     </main>
@@ -34,6 +36,7 @@ import { useAuthStore } from '@/stores/token';
 import { formatDate } from '@/util/formatters';
 import type { User, List } from '@/types/types';
 import ListCard from '@/components/cards/ListCard.vue';
+import CreateListModal from '@/components/modal/CreateListModal.vue';
 
 // Definir variables de datos
 const user = ref<User | null>(null);
