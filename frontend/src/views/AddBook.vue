@@ -177,20 +177,14 @@ function guardarThirdForm(data: any) {
 async function buscarIdsPorNombres() {
     const generosSeleccionadosNombres = [...(thirdFormData.value.generosSeleccionados || [])];
     const etiquetasSeleccionadasNombres = [...(thirdFormData.value.etiquetasSeleccionadas || [])];
-
-    console.log('Nombres de géneros seleccionados:', generosSeleccionadosNombres);
-    console.log('Nombres de etiquetas seleccionadas:', etiquetasSeleccionadasNombres);
-
-const resGeneros = await getGenres();
-const todosGeneros = await resGeneros.json();
-
-const resEtiquetas = await getTags();
-const todasEtiquetas = await resEtiquetas.json();
+    const resGeneros = await getGenres();
+    const todosGeneros = await resGeneros.json();
+    const resEtiquetas = await getTags();
+    const todasEtiquetas = await resEtiquetas.json();
 
     // Buscar los IDs correspondientes a los nombres seleccionados
     const generosIds = generosSeleccionadosNombres.map((nombre: string) => {
         const genero = todosGeneros.find((g: any) => {
-            console.log(`Comparando "${g.nombre.trim().toLowerCase()}" con "${nombre.trim().toLowerCase()}"`);
             return g.nombre.trim().toLowerCase() === nombre.trim().toLowerCase();
         });
         return genero ? genero.id : null;
@@ -198,7 +192,6 @@ const todasEtiquetas = await resEtiquetas.json();
 
     const etiquetasIds = etiquetasSeleccionadasNombres.map((nombre: string) => {
         const etiqueta = todasEtiquetas.find((e: any) => {
-            console.log(`Comparando "${e.nombre.trim().toLowerCase()}" con "${nombre.trim().toLowerCase()}"`);
             return e.nombre.trim().toLowerCase() === nombre.trim().toLowerCase();
         });
         return etiqueta ? etiqueta.id : null;
@@ -216,8 +209,6 @@ async function enviarTodo() {
     try {
         // Buscar los IDs de géneros y etiquetas
         const { generosIds, etiquetasIds } = await buscarIdsPorNombres();
-        console.log('IDs de géneros seleccionados:', generosIds);
-        console.log('IDs de etiquetas seleccionadas:', etiquetasIds);
         // Enviar los datos del primer y segundo formulario al backend (book.py)
         const responseLibro = await addBook({
             method: 'POST',

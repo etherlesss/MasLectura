@@ -180,3 +180,36 @@ def deleteList(id_lista):
     finally:
         # Cerrar el cursor
         if cur: cur.close()
+
+# Agregar libro a lista
+@list_bp.route('/list/add-book', methods=['POST'])
+def add_book_to_list():
+    from app import mysql
+    cur = None
+    try:
+        data = request.get_json()
+        id_lista = data.get('id_lista')
+        id_libro = data.get('id_libro')
+
+        if not id_lista or not id_libro:
+            return jsonify({'message': 'Faltan datos requeridos'}), 400
+
+        cur = mysql.connection.cursor()
+        # Verifica si ya existe la relación para evitar duplicados
+        cur.execute("SELECT * FROM libro_lista WHERE id_lista = %s AND id_libro = %s", (id_lista, id_libro))
+        existe = cur.fetchone()
+        if existe:
+            return jsonify({'message': 'El libro ya está en la lista'}), 409
+
+        fecha = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        cur.execute(
+            "INSERT INTO libro_lista (id_lista, id_libro, fecha) VALUES (%s, %s, %s)",
+            (id_lista, id_libro, fecha)
+        )
+        mysql.connection.commit()
+        return jsonify({'message': 'Libro agregado a la lista exitosamente'}), 201
+    except Exception as err:
+        print(f"Error al agregar libro a la lista: {err}")
+        return jsonify({'message': 'Error interno del servidor'}), 500
+    finally:
+        if cur: cur.close()

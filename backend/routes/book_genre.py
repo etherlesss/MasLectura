@@ -25,3 +25,17 @@ def addBookGenres():
     except Exception as err:
         print(f"Error al asociar géneros: {err}")
         return jsonify({'message': 'Error interno del servidor'}), 500
+    
+@book_genre_bp.route('/book_genre/<int:id_libro>', methods=['GET'])
+def get_book_generos(id_libro):
+    from app import mysql
+    cur = mysql.connection.cursor()
+    cur.execute("""
+        SELECT nombre_genero
+        FROM genero
+        JOIN libro_genero ON libro_genero.id_genero = genero.id_genero
+        WHERE libro_genero.id_libro = %s
+    """, (id_libro,))
+    generos = [row['nombre_genero'] for row in cur.fetchall()]
+    cur.close()
+    return jsonify(generos), 200

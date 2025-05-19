@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // URL DEL SERVIDOR BACKEND
-const url = 'http://127.0.0.1:6640/api';
+const url = 'http://127.0.0.1:3307/api';
 
 const token = localStorage.getItem('token');
 
@@ -51,8 +51,15 @@ export async function getGenres() {
 export async function geBookGenres() {
     return GETRequest('/book_genre');
 }
+export async function getGenresById(id: number) {
+    return GETRequest(`/book_genre/${id}`);
+}
 export async function getBookTags() {
     return GETRequest('/book_tag');
+}
+
+export async function getTagsIdBook(id: number) {
+    return GETRequest(`/book_tag/${id}`);
 }
 export async function getBooks() {
     return GETRequest('/book');
@@ -69,6 +76,10 @@ export async function getListFirstBook(id_lista: number) {
 export async function getListBooks(id_lista: number) {
     return GETRequest(`/list/${id_lista}/books`);
 }
+export async function getCommentsByBook(id_libro: number) {
+    return GETRequest(`/comentario/${id_libro}`);
+}
+
 
 /*
     POST
@@ -133,6 +144,15 @@ export async function uploadImage(formData: FormData) {
         return err.response;
     }
 }
+
+export async function addComment(data: { id_usuario: number, descripcion: string, id_libro: number}) {
+    return POSTRequest('/comentario', data);
+}
+
+export async function addBookToList(data: { id_lista: number, id_libro: number }) {
+  return POSTRequest('/list/add-book', data);
+}
+
 
 /*
     PATCH

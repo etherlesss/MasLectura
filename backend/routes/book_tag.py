@@ -25,3 +25,17 @@ def addBookTags():
     except Exception as err:
         print(f"Error al asociar etiquetas: {err}")
         return jsonify({'message': 'Error interno del servidor'}), 500
+    
+@book_tag_bp.route('/book_tag/<int:id_libro>', methods=['GET'])
+def get_book_tags(id_libro):
+    from app import mysql
+    cur = mysql.connection.cursor()
+    cur.execute("""
+        SELECT nombre_etiqueta
+        FROM libro_etiquetas 
+        JOIN etiqueta ON libro_etiquetas.id_etiquetas = etiqueta.id_etiqueta
+        WHERE libro_etiquetas.id_libro = %s
+    """, (id_libro,))
+    tags = [row['nombre_etiqueta'] for row in cur.fetchall()]
+    cur.close()
+    return jsonify(tags), 200
