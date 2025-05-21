@@ -10,7 +10,7 @@ CREATE TABLE Usuario (
     genero_usuario VARCHAR(50) NOT NULL,
     rol VARCHAR(50) NOT NULL,
     fecha_nacimiento DATE NOT NULL,
-    token_recuperacion VARCHAR(32),
+    token_recuperacion VARCHAR(255),
     exp_recuperacion DATETIME
 );
 
@@ -40,8 +40,8 @@ CREATE TABLE Libro (
     titulo VARCHAR(255) NOT NULL,
     autor VARCHAR(255) NOT NULL,
     artista VARCHAR(255),
-    fecha_publicacion DATE NOT NULL,
-    portada VARCHAR(255),
+    anio_publicacion YEAR NOT NULL,
+    portada VARCHAR(512),
     estado VARCHAR(255) NOT NULL,
     link_compra VARCHAR(1024),
     promedio DECIMAL(2, 1) NOT NULL, -- maximo 2 digitos de numero, 1 digito decimal
@@ -59,8 +59,10 @@ CREATE TABLE Libro (
 CREATE TABLE Comentario (
 	id_comentario INT PRIMARY KEY AUTO_INCREMENT,
     id_usuario INT NOT NULL,
+    id_libro INT NOT NULL,
     descripcion VARCHAR(1024),
-	CONSTRAINT comentario_fk FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario)
+	CONSTRAINT comentario_fk FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario),
+    CONSTRAINT comentario_libro_fk FOREIGN KEY (id_libro) REFERENCES Libro(id_libro)
 );
 
 CREATE TABLE Calificacion_Usuario (

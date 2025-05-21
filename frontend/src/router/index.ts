@@ -25,7 +25,7 @@ const router = createRouter({
     {
       path: '/search',
       name: 'search',
-      component: () => import('../views/Search.vue'),
+      component: () => import('../views/SearchView.vue'),
     },
     {
       path: '/addBook',
@@ -57,7 +57,7 @@ const router = createRouter({
       meta: { requiresAuth: true }
     },
     {
-      path: '/book',
+      path: '/book/:id',
       name: 'bookView',
       component: () => import('../views/BookView.vue'),
     }

@@ -82,7 +82,33 @@ def addBook():
         # Cerrar el cursor
         if cur: cur.close()
 
+# Obtener todos los libros de la base de datos
+@book_bp.route('/books', methods=['GET'])
+def getBooks():
+    from app import mysql
+    cur = None
+    try:
+        # Obtener la conexión a la base de datos
+        cur = mysql.connection.cursor()
 
+        # Consultar todos los libros en la base de datos
+        cur.execute("SELECT * FROM libro")
+        libros = cur.fetchall()
+
+        # Verificar si se encontraron libros
+        if not libros:
+            return jsonify({'message': 'No se encontraron libros'}), 404
+        
+        # Respuesta de éxito
+        return jsonify(libros), 200
+    except Exception as err:
+        print(f"Error al obtener los libros: {err}")
+        return jsonify({'message': f'Error interno del servidor: {err}'}), 500
+    finally:
+        # Cerrar el cursor
+        if cur: cur.close()
+
+# Obtener un libro por su ID
 @book_bp.route('/book/<int:id_libro>', methods=['GET'])
 def getBook(id_libro):
     from app import mysql

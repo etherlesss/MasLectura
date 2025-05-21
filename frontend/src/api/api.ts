@@ -61,8 +61,9 @@ export async function getBookTags() {
 export async function getTagsIdBook(id: number) {
     return GETRequest(`/book_tag/${id}`);
 }
+
 export async function getBooks() {
-    return GETRequest('/book');
+    return GETRequest('/books');
 }
 
 export async function getUserLists(id_usuario: number) {

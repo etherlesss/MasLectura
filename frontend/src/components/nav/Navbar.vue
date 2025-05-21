@@ -6,10 +6,10 @@
                 <img class="logo" src="@/assets/logo/logo-big.png" alt="Logo" style="pointer-events: none;" />
             </router-link>
             <!-- Search bar -->
-            <div class="search-bar mx-auto">
+            <div class="search-bar mx-auto" @submit="handleSearch">
                 <form class="d-flex" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Buscar lecturas..." aria-label="Search"/>
-                    <button class="btn btn-outline-light" type="submit">Buscar</button>
+                    <input class="form-control me-2" type="search" placeholder="Buscar lecturas..." aria-label="Search" v-model="searchQuery"/>
+                    <button class="btn btn-outline-light" type="submit"><i class="bi bi-search"></i></button>
                 </form>
             </div>
             <!-- Toggler/collapsibe Button -->
@@ -51,10 +51,24 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/token';
 
 // Definir variables
 const authStore = useAuthStore();
+const searchQuery = ref<string>('');
+const router = useRouter();
+
+function handleSearch(event: Event) {
+    event.preventDefault();
+    if (searchQuery.value.trim()) {
+        // Redirigir a la página de búsqueda con la consulta
+        router.push({ path: '/search', query: { q: searchQuery.value } });
+        // Limpiar el campo de búsqueda
+        searchQuery.value = '';
+    }
+}
 </script>
 
 <style scoped>
