@@ -24,6 +24,7 @@ export const useAuthStore = defineStore('auth', {
             localStorage.removeItem('token');
             localStorage.removeItem('user');
             localStorage.removeItem('tokenExpiration');
+            window.location.href = '/';
         },
         isTokenValid() {
             if (!this.token || !this.tokenExpiration) {

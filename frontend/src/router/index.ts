@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useAuthStore } from '@/stores/token';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -30,11 +31,13 @@ const router = createRouter({
       path: '/addBook',
       name: 'addBook',
       component: () => import('../views/AddBook.vue'),
+      meta: { requiresAuth: true }
     },
     {
       path: '/my-profile',
       name: 'profile',
       component: () => import('../views/ProfileView.vue'),
+      meta: { requiresAuth: true }
     },
     {
       path: '/recover-password/token=:token',
@@ -45,11 +48,13 @@ const router = createRouter({
       path: '/my-profile/edit',
       name: 'edit-profile',
       component: () => import('../views/ProfileEditView.vue'),
+      meta: { requiresAuth: true }
     },
     {
       path: '/my-lists/:id_lista',
       name: 'my-lists',
       component: () => import('../views/ListView.vue'),
+      meta: { requiresAuth: true }
     },
     {
       path: '/book',
@@ -58,5 +63,15 @@ const router = createRouter({
     }
   ],
 })
+
+router.beforeEach((to, from, next) => {
+  const authStore = useAuthStore();
+  if (to.meta.requiresAuth && !authStore.isTokenValid()) {
+    alert('Su token ha caducado. Por favor inicie sesión nuevamente.');
+    authStore.logout();
+    return;
+  }
+  next();
+});
 
 export default router

@@ -59,7 +59,7 @@ const handleSubmit = async () => {
             // Obtener datos del usuario
             const user = res.data.user;
             // Obtener fecha de expiración del token
-            const expDate = new Date(res.expDate);
+            const expDate = new Date(res.data.exp_date);
 
             // Almacenar token y datos en el store de Pinia
             authStore.setToken(token, expDate);
