@@ -35,3 +35,15 @@ export interface Book {
     sinopsis: string;
     fecha: string; // Este viene en conjunto al hacer inner join con la tabla libro_lista
 }
+
+export interface Tag {
+    id_etiqueta: number;
+    nombre: string;
+    descripcion: string;
+}
+
+export interface Genre {
+    id_genero: number;
+    nombre: string;
+    descripcion: string;
+}
