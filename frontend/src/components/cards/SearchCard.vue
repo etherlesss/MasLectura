@@ -46,4 +46,30 @@ const props = defineProps<{ book: Book }>();
     -webkit-box-orient: vertical;
     max-height: 4.5em;
 }
+
+@media (max-width: 576px) {
+    .card {
+        width: 10rem;
+        height: 16rem;
+    }
+
+    .card img {
+        height: 8rem;
+    }
+
+    .card p {
+        font-size: .75rem;
+        line-height: 120%;
+    }
+
+    .card-text {
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        max-height: 3.5em;
+    }
+
+    .card h5 {
+        font-size: 1rem;
+    }
+}
 </style>

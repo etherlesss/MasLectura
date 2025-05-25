@@ -90,4 +90,26 @@ watch(() => props.lists, loadImages, { immediate: true });
     -webkit-box-orient: vertical;
     max-height: 4.5em;
 }
+
+@media (max-width: 576px) {
+    .card {
+        width: 10rem;
+        height: 14rem;
+    }
+
+    .card img {
+        height: 8rem;
+    }
+
+    .card p {
+        font-size: .75rem;
+        line-height: 120%;
+    }
+
+    .card-text {
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        max-height: 3.5em;
+    }
+}
 </style>

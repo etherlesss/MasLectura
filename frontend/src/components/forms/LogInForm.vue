@@ -19,18 +19,19 @@
                 <!-- Recuperar constraseña -->
                 <p class="mt-2 float-end">Olvidaste tu contraseña? Recupérala <a href="#" class="link-styled" data-bs-toggle="modal" data-bs-target="#recover-modal">aquí</a>.</p>
             </div>
+            <!-- Usuario no tiene cuenta -->
+            <hr>
+            <p class="text-center mt-2">¿No tienes cuenta? Crea la tuya <a href="/signup" class="link-styled">aquí</a>.</p>
         </div>
         <!-- Boton de inicio de sesion -->
         <button type="submit" class="btn ml-primary-btn float-end">Iniciar sesión</button>
     </form>
-    <RecoveryMailModal />
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useAuthStore } from '@/stores/token';
 import { login } from '@/api/api';
-import RecoveryMailModal from '../modal/RecoveryMailModal.vue';
 
 const mail = ref<string>('');
 const pwd = ref<string>('');

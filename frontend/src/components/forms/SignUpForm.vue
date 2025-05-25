@@ -47,6 +47,9 @@
                     </select>
                 </div>
             </div>
+            <!-- Usuario ya tiene cuenta -->
+            <hr>
+            <p class="text-center mt-2">¿Ya tienes cuenta? Inicia sesión <a href="/login" class="link-styled">aquí</a>.</p>
         </div>
         <!-- Boton de inicio de sesion -->
         <button type="submit" class="btn ml-primary-btn float-end">Crear cuenta</button>

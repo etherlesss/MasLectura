@@ -1,19 +1,23 @@
 <template>
-    <nav class="navbar navbar-expand-lg">
+    <nav class="navbar navbar-expand-lg sticky-top">
         <div class="container-fluid">
-            <!-- Brand -->
-            <router-link to="/" class="navbar-brand">
+            <!-- Brand large screens -->
+            <router-link to="/" class="navbar-brand d-none d-lg-block">
                 <img class="logo" src="@/assets/logo/logo-big.png" alt="Logo" style="pointer-events: none;" />
+            </router-link>
+            <!-- Brand small screens -->
+            <router-link to="/" class="navbar-brand d-block d-lg-none">
+                <img class="short-logo" src="@/assets/logo/logo-sm.png" alt="Logo" style="pointer-events: none;" />
             </router-link>
             <!-- Search bar -->
             <div class="search-bar mx-auto" @submit="handleSearch">
                 <form class="d-flex" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Buscar lecturas..." aria-label="Search" v-model="searchQuery"/>
+                    <input class="form-control form-control-sm me-2" type="search" placeholder="Buscar lecturas..." aria-label="Search" v-model="searchQuery"/>
                     <button class="btn btn-outline-light" type="submit"><i class="bi bi-search"></i></button>
                 </form>
             </div>
-            <!-- Toggler/collapsibe Button -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#toggler" aria-controls="toggler" aria-expanded="false" aria-label="Toggle navigation" style="border-color: #fff;">
+            <!-- Toggler/collapsible Button -->
+            <button class="navbar-toggler p-1" type="button" data-bs-toggle="collapse" data-bs-target="#toggler" aria-controls="toggler" aria-expanded="false" aria-label="Toggle navigation" style="border-color: #fff;">
                 <span class="navbar-toggler-icon" style="filter: invert(1);"></span>
             </button>
             <!-- Links -->
@@ -89,6 +93,10 @@ function handleSearch(event: Event) {
 }
 
 .avatar {
+    width: 3rem;
+}
+
+.short-logo {
     width: 3rem;
 }
 </style>

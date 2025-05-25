@@ -79,8 +79,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
-import { getGenres } from '@/api/api';
-import { getTags } from '@/api/api';
+import { getGenres, getTags } from '@/api/api';
 
 // Datos para géneros y etiquetas
 const generos = ref<{ nombre: string, descripcion: string }[]>([]);
@@ -93,27 +92,25 @@ const mensaje = ref('');
 // Cargar géneros y etiquetas desde la API al montar el componente
 onMounted(async () => {
     try {
-        const resGeneros = await getGenres();
-        if (!resGeneros.ok) {
-            throw new Error(`Error al cargar géneros: ${resGeneros.statusText}`);
+        // Cargar géneros
+        const res = await getGenres();
+        if (res.status !== 200) {
+            throw new Error(`Error al cargar géneros: ${res.statusText}`);
         }
-        const generosData = await resGeneros.json();
-        console.log("Datos de géneros:", generosData);
-        generos.value = generosData;
+        generos.value = res.data;
+        console.log("Datos de géneros:", generos.value);
     } catch (error) {
         console.error('Error al cargar los géneros:', error);
     }
 
-
     try {
         // Cargar etiquetas
-        const resEtiquetas = await getTags();
-        if (!resEtiquetas.ok) {
-            throw new Error(`Error al cargar etiquetas: ${resEtiquetas.statusText}`);
+        const res = await getTags();
+        if (res.status !== 200) {
+            throw new Error(`Error al cargar etiquetas: ${res.statusText}`);
         }
-        const etiquetasData = await resEtiquetas.json();
-        console.log("Datos de etiquetas:", etiquetasData);
-        etiquetas.value = etiquetasData;
+        etiquetas.value = res.data;
+        console.log("Datos de etiquetas:", etiquetas.value);
     } catch (error) {
         console.error('Error al cargar las etiquetas:', error);
     }

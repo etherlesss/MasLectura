@@ -4,7 +4,7 @@
         <div class="mb-5">
             <h1>Mi perfil</h1>
             <!-- Formulario -->
-            <form @submit.prevent="handleSubmit" class="w-25" autocomplete="off">
+            <form @submit.prevent="handleSubmit" autocomplete="off">
                 <!-- Nombre de usuario -->
                 <div class="mb-3">
                     <label for="username" class="form-label mb-1"><b>Nombre de usuario</b></label>
@@ -36,10 +36,12 @@
             </form>
         </div>
     </main>
+    <Footer />
 </template>
 
 <script setup lang="ts">
 import Navbar from '@/components/nav/Navbar.vue';
+import Footer from '@/components/pageFooter/Footer.vue';
 import { onMounted, ref } from 'vue';
 import { getProfile, updateProfile } from '@/api/api';
 import { useAuthStore } from '@/stores/token';
@@ -93,5 +95,13 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+form {
+    width: 25%;
+}
 
+@media (max-width: 576px) {
+    form {
+        width: 100%;
+    }
+}
 </style>

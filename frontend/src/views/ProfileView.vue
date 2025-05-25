@@ -25,10 +25,12 @@
         </div>
     </main>
     <ChangePwdModal />
+    <Footer />
 </template>
 
 <script setup lang="ts">
 import Navbar from '@/components/nav/Navbar.vue';
+import Footer from '@/components/pageFooter/Footer.vue';
 import ChangePwdModal from '@/components/modal/ChangePwdModal.vue';
 import { onMounted, ref } from 'vue';
 import { getProfile, getUserLists } from '@/api/api';

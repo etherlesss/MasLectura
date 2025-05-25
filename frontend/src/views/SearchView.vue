@@ -15,7 +15,7 @@
             </div>
             <!-- Collapse -->
             <div>
-                <div class="d-flex justify-content-center">
+                <div class="d-flex justify-content-center mb-3 mb-lg-0">
                     <button class="btn" type="button" data-bs-toggle="collapse" data-bs-target="#filters" aria-expanded="false" aria-controls="filters">
                         Expandir filtros
                     </button>
@@ -33,7 +33,7 @@
                                 </select>
                             </div>
                             <!-- Lista de generos -->
-                            <div class="d-flex row row-cols-6 p-3">
+                            <div class="row row-cols-lg-5 row-cols-md-4 row-cols-2 p-3">
                                 <div v-for="genre in genres" :key="genre.id_genero" class="form-check col">
                                     <input class="form-check-input" type="checkbox" :id="'genero-' + genre.id_genero" :value="genre.nombre" v-model="selectedGenres">
                                     <label class="form-check-label" :for="'genero-' + genre.id_genero" :title="genre.descripcion">
@@ -55,7 +55,7 @@
                             <!-- Lista de etiquetas -->
                             <div class="d-flex flex-row gap-3">
                                 <!-- Incluir -->
-                                <div class="d-flex gap-2 align-items-center">
+                                <div class="d-flex flex-column flex-lg-row gap-2 align-items-lg-center">
                                     <b>Incluir</b>
                                     <Multiselect
                                         v-model="includedTags"
@@ -71,7 +71,7 @@
                                     />
                                 </div>
                                 <!-- Excluir -->
-                                <div class="d-flex gap-2 align-items-center">
+                                <div class="d-flex flex-column flex-lg-row gap-2 align-items-lg-center mb-3 mb-lg-0">
                                     <b>Excluir</b>
                                     <Multiselect
                                         v-model="excludedTags"
@@ -107,10 +107,12 @@
             </div>
         </section>
     </main>
+    <Footer />
 </template>
 
 <script setup lang="ts">
 import Navbar from '@/components/nav/Navbar.vue';
+import Footer from '@/components/pageFooter/Footer.vue';
 import SearchCard from '@/components/cards/SearchCard.vue';
 import Multiselect from 'vue-multiselect';
 import { ref, onMounted, computed, watch } from 'vue';

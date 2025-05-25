@@ -1,5 +1,5 @@
 <template>
-    <main class="login-container">
+    <main class="rcvr-container p-5 p-lg-0">
         <div>
             <!-- Contenedor de titulo y mensaje -->
             <div class="text-center">
@@ -72,7 +72,7 @@ const handleResetPassword = async () => {
 </script>
 
 <style scoped>
-.login-container {
+.rcvr-container {
     display: flex;
     flex-direction: column;
     align-items: center;

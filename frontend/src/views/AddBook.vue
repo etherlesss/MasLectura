@@ -1,13 +1,11 @@
 <template>
-    <div>
-        <Navbar />
-        <div class="addBook-container">
+    <Navbar />
+    <main>
+        <div class="addBook-container d-flex flex-column align-items-center gap-2 p-lg-5 pb-3">
             <!-- Sección 1: Tipo de lectura -->
             <div class="section-container">
                 <div class="button-container">
-                    <button type="button" aria-label="Tipo de lectura" @click="toggleSeccion('tipoLectura')">
-                        Tipo de lectura
-                    </button>
+                    <button @click="toggleSeccion('tipoLectura')">Tipo de Lectura</button>
                 </div>
                 <div class="message-container">
                     <div class="message-box" v-if="!secciones.tipoLectura">
@@ -19,14 +17,12 @@
                             @tipoSeleccionado="tipoSeleccionado = $event" />
                     </div>
                 </div>
-                
                 <div class ="message-info-container">
                     <div class="message-info" v-show="secciones.tipoLectura">
                         <p>Información adicional sobre esta sección.</p>
                     </div>
                 </div>
             </div>
-
             <!-- Sección 2: Ingresar datos -->
             <div class="section-container">
                 <div class="button-container">
@@ -50,30 +46,18 @@
                     </div>
                 </div>
             </div>
-
             <!-- Sección 3: Seleccionar categorías -->
             <div class="section-container">
                 <div class="button-container">
-                    <button 
-                        type="button" 
-                        aria-label="Seleccionar categorías" 
-                        @click="toggleSeccion('seleccionarCategorias')" 
-                        :disabled="!secciones.ingresarDatosGuardado"
-                    >
+                    <button type="button" aria-label="Seleccionar categorías" @click="toggleSeccion('seleccionarCategorias')" :disabled="!secciones.ingresarDatosGuardado">
                         Seleccionar categorías
                     </button>
                 </div>
                 <div class="message-container">
-                    <div 
-                        class="message-box" 
-                        v-if="!secciones.seleccionarCategorias"
-                    >
+                    <div class="message-box" v-if="!secciones.seleccionarCategorias">
                         <h6>Seleccionar género y etiquetas</h6>
                     </div>
-                    <div 
-                        class="form-container" 
-                        v-show="secciones.seleccionarCategorias"
-                    >
+                    <div class="form-container" v-show="secciones.seleccionarCategorias">
                         <ThirdForm @guardar="guardarThirdForm" />
                     </div>
                 </div>
@@ -83,19 +67,15 @@
                     </div>
                 </div>
             </div>
-
             <!-- Botón final -->
             <div class="save-button">
-                <button 
-                    @click="enviarTodo" 
-                    :disabled="!secciones.seleccionarCategoriasGuardado"
-                >
-                    Enviar
+                <button @click="enviarTodo" :disabled="!secciones.seleccionarCategoriasGuardado">
+                    Guardar todo
                 </button>
             </div>
         </div>
-        <Footer />
-    </div>
+    </main>
+    <Footer />
 </template>
 
 <script setup lang="ts">
@@ -273,17 +253,6 @@ async function enviarTodo() {
 </script>
 
 <style scoped>
-.addBook-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
-    gap: 2rem; 
-    padding: 2rem;
-    max-width: 100%;
-    width: 100%; 
-}
-
 .section-container {
     display: flex;
     gap: 1rem;
@@ -295,14 +264,12 @@ async function enviarTodo() {
 }
 
 .message-container {
-    
     display: flex;
     flex-direction: column;
     justify-content: center;
     max-width: 100%;
     width: 100%;
     padding: 0 2rem;
-    
 }
 
 .message-box {
@@ -349,12 +316,21 @@ async function enviarTodo() {
     border-radius: 8px; 
     padding: 1.5rem;
 }
-.message-info {
-    background-color: bisque;
-    max-width: 300px;   
-    width: 100%; 
-    box-sizing: border-box;
-    border-radius: 8px; 
-    padding: 1.5rem;
+
+.message-info-container p {
+    margin: 0;
+}
+
+@media (max-width: 576px) {
+    .section-container {
+        flex-direction: column;
+        align-items: center;
+        padding-block: 1rem;
+        gap: 1rem;
+    }
+
+    .message-container {
+        padding: 0 1rem;
+    }
 }
 </style>

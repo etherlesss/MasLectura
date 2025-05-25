@@ -1,6 +1,6 @@
 <template>
     <Navbar />
-    <main class="p-5">
+    <main class="p-3 p-lg-5">
         <div>
             <div class="d-flex align-items-center gap-2">
                 <h1>{{ list?.nombre_lista }}</h1>

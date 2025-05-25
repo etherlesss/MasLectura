@@ -9,6 +9,16 @@ body, html {
   height: 100%;
 }
 
+#app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+}
+
 * {
   font-family: "Roboto", serif;
   font-optical-sizing: auto;
