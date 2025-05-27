@@ -53,9 +53,9 @@
                                 </select>
                             </div>
                             <!-- Lista de etiquetas -->
-                            <div class="d-flex flex-row gap-3">
+                            <div class="d-flex flex-column flex-lg-row gap-3">
                                 <!-- Incluir -->
-                                <div class="d-flex flex-column flex-lg-row gap-2 align-items-lg-center">
+                                <div class="d-flex flex-column gap-2">
                                     <b>Incluir</b>
                                     <Multiselect
                                         v-model="includedTags"
@@ -71,7 +71,7 @@
                                     />
                                 </div>
                                 <!-- Excluir -->
-                                <div class="d-flex flex-column flex-lg-row gap-2 align-items-lg-center mb-3 mb-lg-0">
+                                <div class="d-flex flex-column gap-2 mb-3 mb-lg-0">
                                     <b>Excluir</b>
                                     <Multiselect
                                         v-model="excludedTags"
@@ -87,10 +87,6 @@
                                     />
                                 </div>
                             </div>
-                        </div>
-                        <!-- Boton de aplicar -->
-                        <div class="d-flex justify-content-center">
-                            <button class="btn" type="button">Aplicar filtros</button>
                         </div>
                     </form>
                 </div>
@@ -116,7 +112,7 @@ import Footer from '@/components/pageFooter/Footer.vue';
 import SearchCard from '@/components/cards/SearchCard.vue';
 import Multiselect from 'vue-multiselect';
 import { ref, onMounted, computed, watch } from 'vue';
-import { getBooks, getTags, getGenres } from '@/api/api';
+import { getBooks, getTags, getGenres, getDetailedBooks } from '@/api/api';
 import { useRoute, useRouter } from 'vue-router';
 import type { Book, Tag, Genre } from '@/types/types';
 
@@ -132,6 +128,7 @@ const tagMode = ref<string>('AND');
 const selectedGenres = ref<string[]>([]);
 const includedTags = ref<Tag[]>([]);
 const excludedTags = ref<Tag[]>([]);
+const detailedBooks = ref<any[]>([]);
 
 // Obtener la consulta de búsqueda desde la URL
 watch (
@@ -185,22 +182,61 @@ async function fetchGenres() {
     }
 }
 
+// Obtener los libros con generos y etiquetas
+async function fetchDetailedBooks() {
+    try {
+        const res = await getDetailedBooks();
+        if (res.status === 200) {
+            detailedBooks.value = res.data;
+            console.log('Detailed books fetched:', detailedBooks.value);
+        }
+    } catch (err) {
+        console.error('Error fetching detailed books:', err);
+    }
+}
+
 // Filtrar libros según la búsqueda
 const filteredBooks = computed(() => {
-    if (!searchQuery.value) {
-        return books.value;
-    }
     return books.value.filter(book => {
-        return book.titulo.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-               book.autor.toLowerCase().includes(searchQuery.value.toLowerCase());
+        // Filtrar por título o autor
+        const matchesSearch =
+            book.titulo.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+            book.autor.toLowerCase().includes(searchQuery.value.toLowerCase());
+
+        // Buscar el libro detallado correspondiente
+        const detailedBook = detailedBooks.value.find(db => db.id_libro === book.id_libro);
+        if (!detailedBook) return false;
+
+        // Filtrar por géneros
+        const bookGenres = detailedBook.generos.map((g: any) => g.nombre_genero);
+        const genreMatch =
+            selectedGenres.value.length === 0 ||
+            (genreMode.value === 'AND'
+                ? selectedGenres.value.every(genre => bookGenres.includes(genre))
+                : selectedGenres.value.some(genre => bookGenres.includes(genre)));
+
+        // Filtrar por etiquetas
+        const bookTags = detailedBook.etiquetas.map((t: any) => t.nombre_etiqueta);
+        const includedMatch =
+            includedTags.value.length === 0 ||
+            (tagMode.value === 'AND'
+                ? includedTags.value.every(tag => bookTags.includes(tag.nombre))
+                : includedTags.value.some(tag => bookTags.includes(tag.nombre)));
+
+        // Excluir etiquetas
+        const excludedMatch =
+            excludedTags.value.length === 0 ||
+            !excludedTags.value.some(tag => bookTags.includes(tag.nombre));
+
+        return matchesSearch && genreMatch && includedMatch && excludedMatch;
     });
 });
 
 onMounted(async () => {
     await fetchBooks();
     await fetchGenres();
-    console.log('Genres:', genres.value);
     await fetchTags();
+    await fetchDetailedBooks();
 });
 </script>
 

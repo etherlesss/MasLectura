@@ -66,6 +66,10 @@ export async function getBooks() {
     return GETRequest('/books');
 }
 
+export async function getDetailedBooks() {
+    return GETRequest('/books/detailed');
+}
+
 export async function getUserLists(id_usuario: number) {
     return GETRequest(`/profile/${id_usuario}/lists`);
 }
@@ -80,7 +84,6 @@ export async function getListBooks(id_lista: number) {
 export async function getCommentsByBook(id_libro: number) {
     return GETRequest(`/comentario/${id_libro}`);
 }
-
 
 /*
     POST
@@ -125,6 +128,10 @@ export async function addTag(data: any) {
 
 export async function createList(data: any) {
     return POSTRequest('/list', data);
+}
+
+export async function rateBook(data: any, id_libro: number) {
+    return POSTRequest(`/book/${id_libro}/rate`, data);
 }
 
 export async function uploadImage(formData: FormData) {

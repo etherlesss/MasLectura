@@ -44,7 +44,7 @@ CREATE TABLE Libro (
     portada VARCHAR(512),
     estado VARCHAR(255) NOT NULL,
     link_compra VARCHAR(1024),
-    promedio DECIMAL(2, 1) NOT NULL, -- maximo 2 digitos de numero, 1 digito decimal
+    promedio DECIMAL(3, 1) NOT NULL, -- maximo 2 digitos de numero, 1 digito decimal
     tipo VARCHAR(255) NOT NULL,
     editorial VARCHAR(255) NOT NULL,
     idioma VARCHAR(255) NOT NULL,

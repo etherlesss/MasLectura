@@ -14,6 +14,17 @@
                     <h5 class="info">Titulo: {{ libro?.titulo || 'Desconocido'}} </h5>
                     <h6 class="info">Autor: {{ libro?.autor || 'Desconocido'}}</h6>
                     <h6 class="info" v-if="libro.tipo === 'manga'">Artista: {{ libro?.artista || 'Desconocido'}}</h6>
+                    <!-- Calificar -->
+                    <div class="rating mt-3">
+                        <h6>Califica este libro:</h6>
+                        <div class="input-group">
+                            <select v-model="calificacion" class="form-select">
+                                <option disabled value="">Selecciona una calificación</option>
+                                <option v-for="n in 10" :key="n" :value="n">{{ n }}</option>
+                            </select>
+                            <button @click="calificarLibro" class="btn ml-primary-btn">Calificar</button>
+                        </div>
+                    </div>
                     <div class="select-list">
                         <AddToList v-if="libro && libro.id_libro" :id-libro="libro.id_libro" />
                     </div>
@@ -127,8 +138,9 @@ import AddToList from '@/components/list/AddToList.vue';
 import Navbar from '@/components/nav/Navbar.vue';
 import Footer from '@/components/pageFooter/Footer.vue';
 import { ref, onMounted } from 'vue';
-import { getBook, getTagsIdBook, getGenresById } from '@/api/api';
+import { getBook, getTagsIdBook, getGenresById, rateBook } from '@/api/api';
 import { useRoute, useRouter } from 'vue-router';
+import { useAuthStore } from '@/stores/token';
 import type { Book } from '@/types/types';
 
 // Definir variables
@@ -138,6 +150,8 @@ const route = useRoute();
 const libro = ref<Book | null>(null);
 const backendUrl = 'http://127.0.0.1:3307/api/';
 const router = useRouter();
+const calificacion = ref<number | null>(null);
+const authStore = useAuthStore();
 
 // Obtener el ID del libro desde la ruta
 const idLibro = Number(route.params.id);
@@ -148,6 +162,7 @@ function getPortadaUrl(portada: string | undefined): string {
   // Si portada es "/uploads/archivo.jpg", concatena el backendUrl
   return backendUrl + portada;
 }
+
 function irAEditar() {
   if (libro.value && libro.value.id_libro) {
     router.push({
@@ -159,6 +174,38 @@ function irAEditar() {
   }
 }
 
+// Calificar el libro
+async function calificarLibro() {
+    try {
+        // Validar que la calificación sea un número entre 1 y 10
+        if (calificacion.value === null || calificacion.value < 1 || calificacion.value > 10) {
+            alert('Por favor, selecciona una calificación válida entre 1 y 10.');
+            return;
+        }
+
+        // Validar que el libro tenga un ID
+        if (!libro.value || !libro.value.id_libro) {
+            alert('No se pudo calificar el libro. Por favor, intenta nuevamente.');
+            return;
+        }
+
+        // Calificar el libro
+        const res = await rateBook({
+            puntaje: calificacion.value,
+            id_usuario: authStore.user.id
+        }, libro.value.id_libro);
+
+        if (res.status === 200) {
+            alert('Libro calificado exitosamente');
+            window.location.reload();
+        } else {
+            alert('Error al calificar el libro. Por favor, intenta nuevamente.');
+        }
+    } catch (error) {
+        console.error('Error al calificar el libro:', error);
+        alert('Ocurrió un error al calificar el libro. Por favor, intenta nuevamente.');
+    }
+}
 
 onMounted(async () => {
     try {
@@ -178,7 +225,7 @@ onMounted(async () => {
         if (resGeneros.status === 200) {
             generos.value = resGeneros.data;
         }
-    
+        
     } catch (e) {
         console.error(e);
     }
