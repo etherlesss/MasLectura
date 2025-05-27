@@ -1,5 +1,5 @@
 <template>
-    <h6>
+    <h6 v-if="!ocultar">
         2. Ingresar datos de la novela
     </h6>
     <br>
@@ -88,19 +88,26 @@
 import { ref, computed } from 'vue';
 import { uploadImage } from '@/api/api';
 
-const titulo = ref('');
-const autor = ref('');
-const editorial = ref('');
-const anio = ref('');
-const idioma = ref('');
-const numeroCapitulos = ref('');
-const urlCompra = ref('');
+const props = defineProps<{
+  initialData?: Record<string, any>;
+  ocultar: boolean;
+}>();
+
+const titulo = ref(props.initialData?.titulo || '');
+const autor = ref(props.initialData?.autor || '');
+const editorial = ref(props.initialData?.editorial || '');
+const anio = ref(props.initialData?.anio || '');
+const idioma = ref(props.initialData?.idioma || '');
+const numeroCapitulos = ref(props.initialData?.num_capitulos || '');
+const urlCompra = ref(props.initialData?.link_compra || '');
 const portadaFile = ref<File|null>(null);
-const urlPortada = ref('');
-const serieFinalizada = ref('');
-const sinopsis = ref('');
-const mensaje = ref('');
+const urlPortada = ref(props.initialData?.portada || '');
+const serieFinalizada = ref(props.initialData?.estado || '');
+const sinopsis = ref(props.initialData?.sinopsis || '');
+const mensaje = ref(props.initialData?.mensaje || '');
 const emit = defineEmits(['guardar']);
+
+
 
 // Computed para validar campos requeridos
 const camposRequeridosCompletos = computed(() =>

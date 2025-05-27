@@ -84,7 +84,7 @@
                         <h6>Informacion edicion</h6>
                     </div>
                     <div class="button-edit">
-                        <button type="button" class="btn">✏️ Editar</button>
+                        <button type="button" class="btn" @click="irAEditar">✏️ Editar</button>
                     </div>
                 </div>
                 <hr class="linea-centro">
@@ -128,7 +128,7 @@ import Navbar from '@/components/nav/Navbar.vue';
 import Footer from '@/components/pageFooter/Footer.vue';
 import { ref, onMounted } from 'vue';
 import { getBook, getTagsIdBook, getGenresById } from '@/api/api';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import type { Book } from '@/types/types';
 
 // Definir variables
@@ -136,7 +136,8 @@ const etiquetas = ref<string[]>([]);
 const generos = ref<string[]>([]);
 const route = useRoute();
 const libro = ref<Book | null>(null);
-const backendUrl = 'http://127.0.0.1:6640/api/';
+const backendUrl = 'http://127.0.0.1:3307/api/';
+const router = useRouter();
 
 // Obtener el ID del libro desde la ruta
 const idLibro = Number(route.params.id);
@@ -147,6 +148,17 @@ function getPortadaUrl(portada: string | undefined): string {
   // Si portada es "/uploads/archivo.jpg", concatena el backendUrl
   return backendUrl + portada;
 }
+function irAEditar() {
+  if (libro.value && libro.value.id_libro) {
+    router.push({
+      name: 'bookEdit',
+      params: {
+        id: libro.value.id_libro
+      }
+    });
+  }
+}
+
 
 onMounted(async () => {
     try {
@@ -166,9 +178,12 @@ onMounted(async () => {
         if (resGeneros.status === 200) {
             generos.value = resGeneros.data;
         }
+    
     } catch (e) {
         console.error(e);
     }
+
+    
 });
 </script>
 

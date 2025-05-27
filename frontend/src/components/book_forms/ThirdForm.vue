@@ -1,5 +1,5 @@
 <template>
-    <h6>
+    <h6 v-if="!ocultar">
         3. Seleccionar género y etiquetas
     </h6>
     <br>
@@ -66,7 +66,7 @@
                 </ul>
             </div>
         </div>
-        <div class="save-button">
+        <div  class="save-button">
             <button type="button" @click="guardarFormulario" aria-label="Guardar">
             Guardar
             </button>
@@ -79,41 +79,55 @@
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
-import { getGenres, getTags } from '@/api/api';
+import { getGenres, getGenresById, getTags, getTagsIdBook } from '@/api/api';
 
 // Datos para géneros y etiquetas
+const propsIdLibro = defineProps<{ idLibro?: number; 
+    ocultar?: boolean;
+ }>();
 const generos = ref<{ nombre: string, descripcion: string }[]>([]);
-const generosSeleccionados = ref<string[]>([]);
 const etiquetas = ref<{ id: number, nombre: string, descripcion: string }[]>([]);
-const etiquetasSeleccionadas = ref<string[]>([]);
 const busquedaEtiqueta = ref('');
 const mensaje = ref('');
+const generosSeleccionados = ref<string[]>([]);
+const etiquetasSeleccionadas = ref<string[]>([]);
 
-// Cargar géneros y etiquetas desde la API al montar el componente
+
+// Al montar, cargar todos los géneros y etiquetas, y si hay idLibro, cargar los seleccionados
 onMounted(async () => {
+    // Cargar todos los géneros y etiquetas
     try {
-        // Cargar géneros
-        const res = await getGenres();
-        if (res.status !== 200) {
-            throw new Error(`Error al cargar géneros: ${res.statusText}`);
-        }
-        generos.value = res.data;
-        console.log("Datos de géneros:", generos.value);
-    } catch (error) {
-        console.error('Error al cargar los géneros:', error);
-    }
+        const resGeneros = await getGenres();
+        if (resGeneros.status === 200) generos.value = resGeneros.data;
+    } catch (e) { console.error('Error al cargar géneros:', e); }
 
     try {
-        // Cargar etiquetas
-        const res = await getTags();
-        if (res.status !== 200) {
-            throw new Error(`Error al cargar etiquetas: ${res.statusText}`);
+        const resEtiquetas = await getTags();
+        if (resEtiquetas.status === 200) etiquetas.value = resEtiquetas.data;
+    } catch (e) { console.error('Error al cargar etiquetas:', e); }
+
+    // Si hay idLibro, cargar los seleccionados
+    if (propsIdLibro.idLibro) {
+    try {
+        const resSelGeneros = await getGenresById(propsIdLibro.idLibro);
+        if (resSelGeneros.status === 200) {
+            console.log('Respuesta de getGenresById:', resSelGeneros.data);
+            generosSeleccionados.value = resSelGeneros.data;
         }
-        etiquetas.value = res.data;
-        console.log("Datos de etiquetas:", etiquetas.value);
-    } catch (error) {
-        console.error('Error al cargar las etiquetas:', error);
-    }
+    } catch (e) { console.error('Error al cargar géneros seleccionados:', e); }
+
+    try {
+        const resSelEtiquetas = await getTagsIdBook(propsIdLibro.idLibro);
+        if (resSelEtiquetas.status === 200) {
+            console.log('Respuesta de getTagsIdBook:', resSelEtiquetas.data);
+            etiquetasSeleccionadas.value = resSelEtiquetas.data;
+        }
+    } catch (e) { console.error('Error al cargar etiquetas seleccionadas:', e); }
+}
+    console.log('Todos los géneros:', generos.value.map(g => g.nombre));
+    console.log('Seleccionados:', generosSeleccionados.value);
+    console.log('Todas las etiquetas:', etiquetas.value.map(e => e.nombre));
+    console.log('Seleccionadas:', etiquetasSeleccionadas.value);
 });
 
 // Filtrar géneros basados en la búsqueda del usuario
@@ -128,7 +142,8 @@ const etiquetasFiltradas = computed(() => {
         .filter((etiqueta) =>
             etiqueta.nombre.toLowerCase().includes(busquedaEtiqueta.value.toLowerCase())
         )
-        .filter((etiqueta) => !etiquetasSeleccionadas.value.includes(etiqueta.nombre)); // Excluir etiquetas seleccionadas
+        .filter((etiqueta) => !etiquetasSeleccionadas.value.includes(etiqueta.nombre)) // Excluir etiquetas seleccionadas
+        .sort((a, b) => a.nombre.localeCompare(b.nombre, 'es', { sensitivity: 'base' })); // Orden alfabético
 });
 
 // Función para agregar etiqueta seleccionada
@@ -170,6 +185,9 @@ function guardarFormulario() {
         console.log('Datos enviados:', datos);
         emit('guardar', datos); // Emitir los datos al componente padre
         mensaje.value = '¡Guardado correctamente!';
+        setTimeout(() => {
+        mensaje.value = '';
+    }, 2500);
     } catch (e) {
         mensaje.value = 'Ocurrió un error al guardar.';
     }
@@ -264,8 +282,14 @@ function guardarFormulario() {
   font-size: 0.75rem;
   text-align: center;
   height: 2rem;
+  
 }
 
+.selected-tag-item {
+
+    border-radius: 5px;
+    border: 1px solid #8a8a8a; /* Borde negro */
+}
 
 .tag-option {
   font-size: 0.75rem; 

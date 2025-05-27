@@ -3,19 +3,19 @@
         1. Seleccionar el tipo de lectura que desea agregar
     </h6>
     <div class="form-check">
-        <input class="form-check-input" type="radio" name="selectOption" id="Book" value="libro" v-model="tipo" @change="emitirSeleccion">
+        <input class="form-check-input" type="radio" name="selectOption" id="Book" value="Libro" v-model="tipo" @change="emitirSeleccion">
         <label class="form-check-label" for="Book">
             Libro
         </label>
     </div>
     <div class="form-check">
-        <input class="form-check-input" type="radio" name="selectOption" id="AssianNovel" value="novel" v-model="tipo" @change="emitirSeleccion">
+        <input class="form-check-input" type="radio" name="selectOption" id="AssianNovel" value="Novela" v-model="tipo" @change="emitirSeleccion">
         <label class="form-check-label" for="AssianNovel">
             Novela Asiática
         </label>
     </div>
     <div class="form-check">
-        <input class="form-check-input" type="radio" name="selectOption" id="Manga" value="manga" v-model="tipo" @change="emitirSeleccion">
+        <input class="form-check-input" type="radio" name="selectOption" id="Manga" value="Manga" v-model="tipo" @change="emitirSeleccion">
         <label class="form-check-label" for="Manga">
             Manga
         </label>
@@ -32,10 +32,11 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-
+const props = defineProps<{ initialData?: Record<string, any> }>();
 const emit = defineEmits(['tipoSeleccionado', 'guardar']);
-const tipo = ref('');
-const mensaje = ref('');
+const tipo = ref(props.initialData?.tipo|| '');
+const mensaje = ref(props.initialData?.mensaje || '');
+
 
 // Emitir el tipo seleccionado
 function emitirSeleccion() {

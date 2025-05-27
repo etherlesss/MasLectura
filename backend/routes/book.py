@@ -129,3 +129,32 @@ def getBook(id_libro):
         return jsonify({'message': f'Error interno del servidor: {str(err)}'}), 500
     finally:
         if cur: cur.close()
+
+# Actualizar un libro por su ID
+@book_bp.route('/book/edit/<int:id_libro>', methods=['PATCH'])
+def updateBook(id_libro):
+    from app import mysql
+    cur = None
+    try:
+        data = request.get_json()
+        # Aquí puedes ajustar los campos según tu modelo
+        campos = [
+            'titulo', 'autor', 'artista', 'anio_publicacion', 'portada', 'estado',
+            'link_compra', 'editorial', 'idioma', 'es_saga',
+            'titulo_saga', 'num_libro', 'num_capitulos', 'sinopsis'
+        ]
+        valores = [data.get(campo) for campo in campos]
+        set_clause = ', '.join([f"{campo}=%s" for campo in campos])
+
+        cur = mysql.connection.cursor()
+        cur.execute(
+            f"UPDATE libro SET {set_clause} WHERE id_libro = %s",
+            (*valores, id_libro)
+        )
+        mysql.connection.commit()
+        return jsonify({'message': 'Libro actualizado correctamente'}), 200
+    except Exception as err:
+        print(f"Error al actualizar el libro: {err}")
+        return jsonify({'message': f'Error interno del servidor: {err}'}), 500
+    finally:
+        if cur: cur.close()

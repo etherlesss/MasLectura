@@ -35,9 +35,9 @@
                         <h6>Ingresar los datos del libro</h6>
                     </div>
                     <div class="form-container" v-show="secciones.ingresarDatos">
-                        <SecondFormBook v-if="tipoSeleccionado === 'libro'" @guardar="guardarSecondForm" />
-                        <SecondFormNovel v-if="tipoSeleccionado === 'novel'"  @guardar="guardarSecondForm" />
-                        <SecondFormManga v-if="tipoSeleccionado === 'manga'"  @guardar="guardarSecondForm" />
+                        <SecondFormBook v-if="tipoSeleccionado === 'Libro'" :ocultar="false"@guardar="guardarSecondForm" />
+                        <SecondFormNovel v-if="tipoSeleccionado === 'Novela'" :ocultar="false" @guardar="guardarSecondForm" />
+                        <SecondFormManga v-if="tipoSeleccionado === 'Manga'"  :ocultar="false"@guardar="guardarSecondForm" />
                     </div>
                 </div>
                 <div class ="message-info-container">
@@ -158,9 +158,9 @@ async function buscarIdsPorNombres() {
     const generosSeleccionadosNombres = [...(thirdFormData.value.generosSeleccionados || [])];
     const etiquetasSeleccionadasNombres = [...(thirdFormData.value.etiquetasSeleccionadas || [])];
     const resGeneros = await getGenres();
-    const todosGeneros = await resGeneros.json();
+    const todosGeneros = await resGeneros.data;
     const resEtiquetas = await getTags();
-    const todasEtiquetas = await resEtiquetas.json();
+    const todasEtiquetas = await resEtiquetas.data
 
     // Buscar los IDs correspondientes a los nombres seleccionados
     const generosIds = generosSeleccionadosNombres.map((nombre: string) => {
@@ -191,38 +191,30 @@ async function enviarTodo() {
         const { generosIds, etiquetasIds } = await buscarIdsPorNombres();
         // Enviar los datos del primer y segundo formulario al backend (book.py)
         const responseLibro = await addBook({
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
                 ...firstFormData.value,
                 ...secondFormData.value,
-            }),
-        });
+            });
 
-        if (!responseLibro.ok) {
+        if (responseLibro.status !== 201) {
             if (responseLibro.status === 409) {
-                const data = await responseLibro.json();
-                alert(data.message);
+                alert(responseLibro.data.message);
                 return;
+            } else {
+                throw new Error(`Error al guardar el libro: ${responseLibro.status}`);
             }
-            else throw new Error(`Error al guardar el libro: ${responseLibro.status}`);
         }
 
         // Obtener el ID del libro recién creado
-        const { id_libro } = await responseLibro.json();
+        const id_libro = responseLibro.data.id_libro;
         console.log('Libro guardado con ID:', id_libro);
 
         // Enviar los géneros seleccionados al backend (book_genre.py)
         const responseGeneros = await addBookGenre({
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                id_libro,
-                generos: generosIds, // IDs de géneros
-            }),
+            id_libro,
+            generos: generosIds,
         });
 
-        if (!responseGeneros.ok) {
+       if (responseGeneros.status !== 201 && responseGeneros.status !== 200) {
             throw new Error(`Error al guardar los géneros: ${responseGeneros.status}`);
         }
 
@@ -230,18 +222,13 @@ async function enviarTodo() {
 
         // Enviar las etiquetas seleccionadas al backend (book_tag.py)
         const responseEtiquetas = await addBookTag ({
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                id_libro,
-                etiquetas: etiquetasIds, // IDs de etiquetas
-            }),
+            id_libro,
+            etiquetas: etiquetasIds,
         });
 
-        if (!responseEtiquetas.ok) {
+         if (responseEtiquetas.status !== 201 && responseEtiquetas.status !== 200) {
             throw new Error(`Error al guardar las etiquetas: ${responseEtiquetas.status}`);
         }
-
         console.log('Etiquetas asociadas correctamente.');
 
         alert('Libro, géneros y etiquetas guardados correctamente.');

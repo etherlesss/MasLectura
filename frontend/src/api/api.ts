@@ -187,6 +187,18 @@ export async function updatePassword(id_usuario: number, data: any) {
 export async function updateList(id_lista: number, data: any) {
     return PATCHRequest(`/list/${id_lista}`, data);
 }
+export async function updateBook(id_libro: number, data: any) {
+    return axios.patch(`${url}/book/edit/${id_libro}`, data, config);
+}
+export async function updateBookGenres(id_libro: number, data: any) {
+    return axios.put(`${url}/book_genre/edit/${id_libro}`, data, config);
+}
+
+export async function updateBookTags(id_libro: number, data: any) {
+    return axios.put(`${url}/book_tag/edit/${id_libro}`, data, config);
+}
+
+
 
 /*
     DELETE

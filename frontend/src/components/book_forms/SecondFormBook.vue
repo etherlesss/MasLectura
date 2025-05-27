@@ -1,5 +1,5 @@
 <template>
-    <h6>
+    <h6 v-if="!ocultar">
         2. Ingresar datos del libro
     </h6>
     <br>
@@ -21,8 +21,8 @@
             <label for="inputIdioma" class="form-label mb-1">Idioma</label>
             <select id="inputIdioma" class="form-select" v-model="idioma">
             <option value="">Ninguno</option>
-            <option value="Espanol">Español</option>
-            <option value="Ingles">Inglés</option>
+            <option value="Español">Español</option>
+            <option value="Inglés">Inglés</option>
             <option value="Otro">Otro</option>
         </select>
         </div>
@@ -77,7 +77,7 @@
             <label for="sinopsis" class="form-label mb-1">Sinopsis</label>
             <textarea  class="form-control" id="sinopsis" rows="3" v-model="sinopsis"></textarea>
         </div>
-        <div class="save-button">
+        <div  class="save-button">
             <button type="button" alt = " " aria-label="" @click="guardarFormulario" >
             Guardar
             </button>
@@ -93,28 +93,31 @@ import { ref, computed } from 'vue';
 import { uploadImage } from '@/api/api';
 
 const emit = defineEmits(['guardar']);
+const props = defineProps<{
+  initialData?: Record<string, any>;
+  ocultar?: boolean;
+}>();
 
-const titulo = ref('');
-const autor = ref('');
-const editorial = ref('');
-const idioma = ref('');
-const anio = ref('');
-const urlCompra = ref('');
-const tituloSaga = ref('');
-const numeroLibro = ref('');
-const esSaga = ref('');
-const sinopsis= ref('');
+const titulo = ref(props.initialData?.titulo || '');
+const autor = ref(props.initialData?.autor || '');
+const editorial = ref(props.initialData?.editorial || '');
+const idioma = ref(props.initialData?.idioma || '');
+const anio = ref(props.initialData?.anio_publicacion || '');
+const urlCompra = ref(props.initialData?.link_compra || '');
+const tituloSaga = ref(props.initialData?.titulo_saga || '');
+const numeroLibro = ref(props.initialData?.num_libro || '');
+const esSaga = ref(props.initialData?.es_saga || '');
+const sinopsis= ref(props.initialData?.sinopsis || '');
 const portadaFile = ref<File|null>(null);
-const urlPortada = ref('');
-const mensaje = ref('');
+const urlPortada = ref(props.initialData?.portada || '');
+const mensaje = ref(props.initialData?.mensaje || '');
 
 // Computed para validar campos requeridos
 const camposRequeridosCompletos = computed(() =>
     titulo.value.trim() !== '' &&
     autor.value.trim() !== '' &&
     idioma.value.trim() !== '' &&
-    sinopsis.value.trim() !== '' &&
-    portadaFile.value !== null
+    sinopsis.value.trim() !== '' 
 );
 
 function onFileChange(event: Event) {
