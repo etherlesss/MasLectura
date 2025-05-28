@@ -94,7 +94,7 @@
                     <div class="info-edit">
                         <h6>Informacion edicion</h6>
                     </div>
-                    <div class="button-edit">
+                    <div class="button-edit" v-if="authStore.token">
                         <button type="button" class="btn" @click="irAEditar">✏️ Editar</button>
                     </div>
                 </div>

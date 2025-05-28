@@ -21,8 +21,8 @@
         </label>
     </div>
     <div class="save-button">
-        <button type="button" alt=" " aria-label="Guardar" @click="guardarFormulario":disabled="!tipo">
-            Guardar
+        <button class = "btn ml-primary-btn mt-2 " type="button" alt=" " aria-label="Guardar" @click="guardarFormulario":disabled="!tipo">
+            Confirmar
         </button>
     </div>
     <div v-if="mensaje" class="mensaje-guardado">

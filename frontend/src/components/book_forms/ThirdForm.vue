@@ -67,8 +67,8 @@
             </div>
         </div>
         <div  class="save-button">
-            <button type="button" @click="guardarFormulario" aria-label="Guardar">
-            Guardar
+            <button class = "btn ml-primary-btn mt-2 " type="button" @click="guardarFormulario" aria-label="Guardar">
+            Confirmar
             </button>
         </div>
         <div v-if="mensaje" :class="mensaje === '¡Guardado correctamente!' ? 'mensaje-guardado' : 'mensaje-error'">

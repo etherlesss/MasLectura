@@ -2,6 +2,32 @@
     <Navbar />
     <main>
         <div class="addBook-container d-flex flex-column align-items-center gap-2 p-lg-5 pb-3">
+            <div class=" instructions">
+                <h4 class = 'center'>Editar lectura</h4>
+            <h6 >
+                <p>En esta sección es posible editar los datos de las lecturas. Por favor, 
+                    ser consciente de que los cambios realizados
+                    serán visibles para todos los usuarios de la plataforma.
+                    Asegúrate de que la información es correcta y está actualizada.
+                    <br>
+                    
+                    Para editar una lectura, es necesario completar los siguientes pasos:
+                    <br>   
+                    <br>
+                    1. Editar los datos principales de la lectura (título, autor, etc.).
+                    <br>    
+                    2. Editar los géneros y etiquetas de la lectura.
+                    <br>
+                    3. Guardar los cambios realizados.
+                    <br>
+                    <br>
+                    Una vez que se guarden los cambios, la lectura se actualizará en la plataforma.
+                    Guardar todos los cambios en los datos principales, géneros y etiquetas solo será posibles 
+                    una vez que se hayan confirmado los cambios en cada sección.
+                    <br>
+                </p>
+            </h6>
+            </div>
             <!-- Formulario de datos principales -->
             <div class="top form-container mb-4">
                 <h6>Editar información de la lectura</h6>
@@ -34,8 +60,9 @@
                 />
             </div>
             <!-- Botón final -->
-            <div class="save-button">
-                <button @click="enviarTodo">
+            <div class=save-button>
+                <button class="btn ml-primary-btn mt-2 " @click="enviarTodo"
+                :disabled="!puedeGuardarTodo">
                     Guardar todo
                 </button>
             </div>
@@ -61,7 +88,8 @@ import SecondFormManga from '@/components/book_forms/SecondFormManga.vue';
 import ThirdForm from '@/components/book_forms/ThirdForm.vue';
 import Footer from '@/components/pageFooter/Footer.vue';
 import { useRoute } from 'vue-router';
-import { ref, onMounted } from 'vue';
+import { useAuthStore } from '@/stores/token';
+import { ref, onMounted, computed} from 'vue';
 import { getBook, getGenresById, getTagsIdBook, updateBook, updateBookGenres,updateBookTags } from '@/api/api';
 
 
@@ -107,17 +135,25 @@ onMounted(async () => {
         console.error(e);
     }
 });
-
+const seccionGuardada = ref({
+  datosPrincipales: false,
+  categorias: false,
+});
 function guardarSecondForm(data: Record<string, any>) {
     secondFormData.value = data;
+    seccionGuardada.value.datosPrincipales = true;
     
 }
-
 function guardarThirdForm(data: Record<string, any>) {
     thirdFormData.value = data;
+    seccionGuardada.value.categorias = true;
     console.log('Datos recibidos de ThirdForm:', data);
-    
 }
+
+// Computed para habilitar/deshabilitar el botón
+const puedeGuardarTodo = computed(() =>
+  seccionGuardada.value.datosPrincipales && seccionGuardada.value.categorias
+);
 
 function enviarTodo() {
     mostrarModal.value = true;
@@ -157,7 +193,7 @@ async function confirmarGuardar() {
 <style scoped>
 
 .addBook-container {
-    max-width: 800px;
+    max-width: 1200px;
     margin: 0 auto;
 }
 
@@ -184,6 +220,16 @@ async function confirmarGuardar() {
   text-align: center;
   min-width: 300px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.instructions h4{
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.instructions h6 {
+    text-align: justify;
+    margin-bottom: 1rem;
 }
 
 
