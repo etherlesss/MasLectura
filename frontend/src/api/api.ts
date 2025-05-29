@@ -85,6 +85,10 @@ export async function getCommentsByBook(id_libro: number) {
     return GETRequest(`/comentario/${id_libro}`);
 }
 
+export async function getRecommendations(id_usuario: number) {
+    return GETRequest(`/recommend?id_usuario=${id_usuario}`);
+}
+
 /*
     POST
 */

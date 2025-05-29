@@ -23,6 +23,7 @@ from routes.comment import comment_bp
 
 # Importar endpoints
 from endpoints.recoverpwd import recover_password_bp
+from endpoints.user_recommendation import user_recommendation_bp
 
 # Cargar variables de entorno
 load_dotenv()
@@ -83,6 +84,7 @@ app.register_blueprint(book_genre_bp, url_prefix='/api')
 app.register_blueprint(upload_bp, url_prefix='/api')
 app.register_blueprint(list_bp, url_prefix='/api')
 app.register_blueprint(comment_bp, url_prefix='/api')
+app.register_blueprint(user_recommendation_bp, url_prefix='/api')
 
 # Mensaje de encendido del servidor backend
 if __name__ == "__main__":
