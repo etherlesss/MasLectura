@@ -11,3 +11,9 @@ Para salir de .venv, se debe escribir el comando `deactivate`.
 ## Correr backend
 
 `python app.py`
+
+## Entrenar modelo
+
+Debido al peso del dataset de entrenamiento, es necesario descargar el [https://www.kaggle.com/datasets/mohamedbakhet/amazon-books-reviews](dataset) desde kaggle. Crear dentro de `/ai` una carpeta llamada _training_ e insertar ambos CSV dentro de esa carpeta.
+
+Para obtener nuevas recomendaciones (por ejemplo, después de crear un usuario y calificar varios libros), podemos volver a entrenar el modelo ejecutando el comando `python -m ai.train` desde la carpeta `/backend`.
