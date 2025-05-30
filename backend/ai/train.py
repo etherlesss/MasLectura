@@ -1,8 +1,9 @@
 import numpy as np
 import joblib
 import os
+import xgboost as xgb
 from sklearn.model_selection import GridSearchCV
-from ai.pipeline import getRatingsDataframe, buildUtiltyMatrix, centerUtilityMatrix, getGenresOneHot, getTagsOneHot
+from ai.pipeline import getCombinedRatingsDF, buildUtiltyMatrix, centerUtilityMatrix, getGenresOneHot, getTagsOneHot
 from ai.svd import trainSVD
 from ai.xgboost_model import buildXGBDataset, trainXGB
 from app import app
@@ -11,7 +12,10 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 
 with app.app_context():
-    df = getRatingsDataframe()
+    df = getCombinedRatingsDF(
+        use_local=True,
+        use_amazon=True
+    )
     genres_onehot = getGenresOneHot()
     tags_onehot = getTagsOneHot()
     if df is not None:
@@ -32,9 +36,9 @@ with app.app_context():
 
         # Definir hiperparámetros
         param_grid = {
-            'n_estimators': [300, 550, 800],
-            'max_depth': [3, 4, 5],
-            'learning_rate': [0.1, 0.05, 0.01]
+            'n_estimators': [300, 600, 800],
+            'max_depth': [3, 4, 5, 6 ],
+            'learning_rate': [0.1, 0.05, 0.01, 0.2]
         }
 
         # Configurar GridSearchCV
@@ -42,7 +46,7 @@ with app.app_context():
             estimator=xgb_model,
             param_grid=param_grid,
             scoring='neg_mean_squared_error',
-            cv=3,
+            cv=5,
             verbose=2,
             n_jobs=-1
         )
@@ -54,7 +58,7 @@ with app.app_context():
         print(grid_search.best_params_)
         print("Mejor score (neg MSE):", grid_search.best_score_)
 
-        # Usa el mejor modelo encontrado
+        # Usar el mejor modelo encontrado
         model = grid_search.best_estimator_
         '''
 

@@ -17,14 +17,14 @@ def recommend():
     model = joblib.load('model/xgboost_model.pkl')
     user_embeddings = np.load('model/user_embeddings.npy')
     book_embeddings = np.load('model/book_embeddings.npy')
-    user_ids = np.load('model/user_ids.npy')
-    book_ids = np.load('model/book_ids.npy')
+    user_ids = np.load('model/user_ids.npy', allow_pickle=True)
+    book_ids = np.load('model/book_ids.npy', allow_pickle=True)
     genres_onehot = pd.read_csv('model/genres_onehot.csv', index_col=0)
     tags_onehot = pd.read_csv('model/tags_onehot.csv', index_col=0)
 
     user_id = request.args.get('id_usuario', type=int)
     recs = getRecommendations(
-        user_id, model, user_embeddings, book_embeddings, user_ids, book_ids, genres_onehot, tags_onehot, top_n=10
+        user_id, model, user_embeddings, book_embeddings, user_ids, book_ids, genres_onehot, tags_onehot, top_n=20
     )
 
     return jsonify([{'id_libro': r[0], 'score': float(r[1])} for r in recs])

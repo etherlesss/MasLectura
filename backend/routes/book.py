@@ -1,7 +1,5 @@
 # Importar dependencias
 from flask import Blueprint, jsonify, request
-import subprocess
-import sys
 
 # Crear un objeto Blueprint para la ruta de libros
 book_bp = Blueprint('book', __name__)
@@ -215,9 +213,6 @@ def rateBook(id_libro):
         # Actualizar la calificación del libro
         cur.execute("UPDATE libro SET promedio = %s WHERE id_libro = %s", (puntaje, id_libro))
         mysql.connection.commit()
-
-        # Reentrenar el modelo tras calificar un libro
-        subprocess.run([sys.executable, '-m', 'ai.train'])
 
         return jsonify({'message': 'Calificación actualizada correctamente'}), 200
     except Exception as err:

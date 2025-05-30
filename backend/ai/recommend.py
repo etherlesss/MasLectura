@@ -72,7 +72,7 @@ def getCandidates(fav_genres, fav_tags):
         if cur: cur.close()
 
 # Recomienda libros a un usuario basado en un modelo y filtrando por géneros/etiquetas favoritos.
-def getRecommendations(user_id, model, user_embeddings, book_embeddings, user_ids, book_ids, genres_onehot, tags_onehot, top_n=5):
+def getRecommendations(user_id, model, user_embeddings, book_embeddings, user_ids, book_ids, genres_onehot, tags_onehot, top_n):
     fav_genres, fav_tags = getUserFavorites(user_id)
     candidates = getCandidates(fav_genres, fav_tags)
     if not candidates:

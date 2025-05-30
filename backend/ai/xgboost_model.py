@@ -32,7 +32,7 @@ def trainXGB(X, y):
         learning_rate: Tasa de aprendizaje para actualizar los pesos.
         random_state: Semilla para la aleatoriedad, para reproducibilidad.
     '''
-    model = xgb.XGBRegressor(n_estimators=800, max_depth=3, learning_rate=0.1, random_state=42)
+    model = xgb.XGBRegressor(n_estimators=800, max_depth=6, learning_rate=0.2, random_state=42)
     model.fit(X, y)  # Entrenar el modelo
     print("Modelo XGBoost entrenado.")
     return model

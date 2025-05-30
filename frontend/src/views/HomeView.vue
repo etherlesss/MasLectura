@@ -72,12 +72,14 @@ async function fetchRecommendations() {
         try {
             const res = await getRecommendations(authStore.user.id);
             if (res.status === 200) {
-                recommended.value = res.data;
                 // Filtrar los libros recomendados que ya están en la lista de libros
-                const recommendedBooks = recommended.value
+                const recommendedBooks = res.data
                     .map(rec => books.value.find(book => book.id_libro === rec.id_libro))
-                    .filter(book => !!book) // Eliminar undefined
-                recommended.value = recommendedBooks;
+                    .filter(book => !!book); // Eliminar undefined
+
+                // Tomar 10 del pool
+                const shuffled = recommendedBooks.sort(() => 0.5 - Math.random());
+                recommended.value = shuffled.slice(0, 10);
             }
         } catch (err) {
             console.error('Error fetching recommendations:', err);

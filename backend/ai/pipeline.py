@@ -71,8 +71,50 @@ def getTagsOneHot():
     finally:
         if cur: cur.close()
 
+# Cargar dataset amazon para training
+def getAmazonRatingsDF():
+    max_users = 10000
+    max_books = 10000
+    books_amzn = pd.read_csv('ai/training/books_data.csv')
+    reviews_amzn = pd.read_csv('ai/training/Books_rating.csv')
+    id_offset = 1000000
+    reviews_amzn = reviews_amzn.rename(columns={
+        'User_id': 'id_usuario',
+        'Title': 'titulo',
+        'review/score': 'puntaje'
+    })
+    books_amzn['id_libro'] = books_amzn['Title'].astype('category').cat.codes + id_offset
+    reviews_amzn = reviews_amzn.merge(books_amzn[['Title', 'id_libro']], left_on='titulo', right_on='Title', how='left')
+    df_amzn = reviews_amzn[['id_usuario', 'id_libro', 'puntaje']].dropna()
+    df_amzn['puntaje'] = pd.to_numeric(df_amzn['puntaje'], errors='coerce')
+    df_amzn = df_amzn.dropna(subset=['puntaje'])
+
+    # Filtrar por los usuarios y libros más frecuentes
+    top_users = df_amzn['id_usuario'].value_counts().nlargest(max_users).index
+    top_books = df_amzn['id_libro'].value_counts().nlargest(max_books).index
+    df_amzn = df_amzn[df_amzn['id_usuario'].isin(top_users) & df_amzn['id_libro'].isin(top_books)]
+
+    return df_amzn
+
+# Combinar dataframes
+def getCombinedRatingsDF(use_local, use_amazon):
+    dfs = []
+    if use_local:
+        df_local = getRatingsDataframe()
+        if df_local is not None:
+            dfs.append(df_local)
+    if use_amazon:
+        df_amzn = getAmazonRatingsDF()
+        if df_amzn is not None:
+            dfs.append(df_amzn)
+    if dfs:
+        return pd.concat(dfs, ignore_index=True)
+    return None
+
 # Construye una matriz de utilidad (usuarios x libros) a partir del DataFrame de calificaciones.
 def buildUtiltyMatrix(df):
+    # Eliminar duplicados (multiples calificaciones de un usuario a un libro)
+    df = df.drop_duplicates(subset=['id_usuario', 'id_libro'], keep='last')
     # Pivotear el DataFrame para crear la matriz de utilidad
     matrix = df.pivot(index='id_usuario', columns='id_libro', values='puntaje')
     # Rellenar los valores NaN con 0, libros que no han sido calificados por un usuario
