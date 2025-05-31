@@ -114,6 +114,9 @@ onMounted(async () => {
         if (resLibro.status !== 200) throw new Error('No se pudo obtener el libro');
         libro.value = resLibro.data;
 
+        // Settear el título de la pagina como el libro obtenido
+        document.title = `Editar libro - ${libro.value.titulo}` || 'Libro';
+
         // Asignar tipoSeleccionado y datos iniciales
         tipoSeleccionado.value = libro.value.tipo || '';
         secondFormData.value = { ...libro.value };

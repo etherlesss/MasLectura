@@ -214,6 +214,9 @@ onMounted(async () => {
         if (resLibro.status !== 200) throw new Error('No se pudo obtener el libro');
         libro.value = resLibro.data;
 
+        // Settear el título de la pagina como el libro obtenido
+        document.title = `Libro - ${libro.value.titulo}` || 'Libro';
+
         // Obtener etiquetas del libro
         const resEtiquetas = await getTagsIdBook(idLibro);
         if (resEtiquetas.status === 200) {

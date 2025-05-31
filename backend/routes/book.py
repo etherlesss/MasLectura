@@ -206,9 +206,15 @@ def rateBook(id_libro):
         id_usuario = data.get('id_usuario')
         puntaje = data.get('puntaje')
 
-        # Guardar la calificación del libro
-        cur.execute("INSERT INTO Calificacion_Usuario (id_usuario, id_libro, puntaje) VALUES (%s, %s, %s)", (id_usuario, id_libro, puntaje))
-        mysql.connection.commit()
+        # Verificar si el usuario ha calificado el libro antes
+        cur.execute("SELECT puntaje FROM Calificacion_Usuario WHERE id_usuario = %s AND id_libro = %s", (id_usuario, id_libro))
+
+        # Si el usuario ya ha calificado el libro, actualizar la calificación
+        if cur.rowcount > 0:
+            cur.execute("UPDATE Calificacion_Usuario SET puntaje = %s WHERE id_usuario = %s AND id_libro = %s", (puntaje, id_usuario, id_libro))
+        else:
+            # Si el usuario no ha calificado el libro, insertar una nueva calificación
+            cur.execute("INSERT INTO Calificacion_Usuario (id_usuario, id_libro, puntaje) VALUES (%s, %s, %s)", (id_usuario, id_libro, puntaje))
         
         # Actualizar la calificación del libro
         cur.execute("UPDATE libro SET promedio = %s WHERE id_libro = %s", (puntaje, id_libro))

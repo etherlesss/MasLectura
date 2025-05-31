@@ -73,6 +73,9 @@ async function removeList(listID: number) {
 onMounted(async() => {
     await fetchList();
     await fetchListBooks();
+    
+    // Settear el título de la pagina como la lista obtenida
+    document.title = `Lista - ${list.value.nombre_lista}` || 'Lista';
 });
 </script>
 

@@ -1,6 +1,6 @@
 # Importar dependencias
 from flask import Blueprint, jsonify, request
-import datetime
+from datetime import datetime
 
 # Crear un objeto Blueprint para la ruta de libros
 list_bp = Blueprint('list', __name__)
