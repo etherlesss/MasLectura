@@ -70,7 +70,13 @@ const router = createRouter({
       path: '/book/edit/:id',
       name: 'bookEdit', 
       component: () => import('../views/BookEdit.vue'),
-    }
+    },
+    {
+      path: '/user-profile/:id',
+      name: 'user-profile',
+      component: () => import('../views/OtherUserProfile.vue'),
+      meta: { requiresAuth: true }
+    },
   ],
 })
 

@@ -20,6 +20,7 @@ from routes.book_genre import book_genre_bp
 from routes.upload_image import upload_bp
 from routes.list import list_bp
 from routes.comment import comment_bp
+from routes.user import user_bp
 
 # Importar endpoints
 from endpoints.recoverpwd import recover_password_bp
@@ -85,6 +86,7 @@ app.register_blueprint(upload_bp, url_prefix='/api')
 app.register_blueprint(list_bp, url_prefix='/api')
 app.register_blueprint(comment_bp, url_prefix='/api')
 app.register_blueprint(user_recommendation_bp, url_prefix='/api')
+app.register_blueprint(user_bp, url_prefix='/api')
 
 # Mensaje de encendido del servidor backend
 if __name__ == "__main__":

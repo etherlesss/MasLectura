@@ -39,14 +39,20 @@ import { formatDate } from '@/util/formatters';
 import type { User, List } from '@/types/types';
 import ListCard from '@/components/cards/ListCard.vue';
 import CreateListModal from '@/components/modal/CreateListModal.vue';
+import { useRoute, useRouter } from 'vue-router';
 
 // Definir variables de datos
 const user = ref<User | null>(null);
 const lists = ref<List[]>([]);
-
+const router = useRouter();
+const route = useRoute();
 // Obtener el ID del usuario desde el almacenamiento local
 const authStore = useAuthStore();
 
+
+if (Number(route.params.id) === Number(authStore.user.id)) {
+  router.replace('/my-profile');
+}
 // Obtener los datos del usuario desde API
 async function fetchUser() {
     try {

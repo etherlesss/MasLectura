@@ -215,7 +215,7 @@ onMounted(async () => {
         libro.value = resLibro.data;
 
         // Settear el título de la pagina como el libro obtenido
-        document.title = `Libro - ${libro.value.titulo}` || 'Libro';
+        document.title = libro.value && libro.value.titulo ? `Libro - ${libro.value.titulo}` : 'Libro';
 
         // Obtener etiquetas del libro
         const resEtiquetas = await getTagsIdBook(idLibro);

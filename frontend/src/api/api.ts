@@ -88,7 +88,9 @@ export async function getCommentsByBook(id_libro: number) {
 export async function getRecommendations(id_usuario: number) {
     return GETRequest(`/recommend?id_usuario=${id_usuario}`);
 }
-
+export async function getUserRole(id_usuario: number) {
+  return GETRequest(`/user/role/${id_usuario}`);
+}
 /*
     POST
 */
@@ -233,4 +235,11 @@ export async function removeBookFromList(id_lista: number, id_libro: number) {
 
 export async function deleteList(id_lista: number) {
     return DELETERequest(`/list/${id_lista}`);
+}
+
+export async function deleteComment(id_comentario: number) {
+    return DELETERequest(`/comentario/${id_comentario}`);
+}
+export async function deleteUser(id_usuario: number) {
+    return DELETERequest(`/user/${id_usuario}`);
 }

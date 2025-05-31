@@ -30,7 +30,7 @@ def get_comments(id_libro):
         cur = mysql.connection.cursor()
         cur.execute(
         """
-        SELECT u.nombre_usuario, c.descripcion
+        SELECT c.id_usuario, c.id_comentario, u.nombre_usuario, c.descripcion
         FROM comentario c
         JOIN usuario u ON c.id_usuario = u.id_usuario
         WHERE c.id_libro = %s
@@ -40,7 +40,7 @@ def get_comments(id_libro):
     )
         rows = cur.fetchall()
         comentarios = [
-            {"nombre_usuario": row["nombre_usuario"], "descripcion": row["descripcion"]}
+            { "id_usuario": row["id_usuario"],"id_comentario": row["id_comentario"], "nombre_usuario": row["nombre_usuario"], "descripcion": row["descripcion"]}
             for row in rows
         ]
         cur.close()
@@ -48,3 +48,17 @@ def get_comments(id_libro):
     except Exception as e:
         print(f"Error en get_comments: {e}")
         return jsonify({"error": "Error interno al obtener comentarios"}), 500
+    
+
+@comment_bp.route('/comentario/<int:id_comentario>', methods=['DELETE'])
+def delete_comment(id_comentario):
+    try:
+        from app import mysql
+        cur = mysql.connection.cursor()
+        cur.execute("DELETE FROM comentario WHERE id_comentario = %s", (id_comentario,))
+        mysql.connection.commit()
+        cur.close()
+        return jsonify({'message': 'Comentario eliminado correctamente'}), 200
+    except Exception as e:
+        print(f"Error al eliminar comentario: {e}")
+        return jsonify({'error': 'Error interno al eliminar comentario'}), 500
