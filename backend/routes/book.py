@@ -239,6 +239,30 @@ def getSimilarBooks(id_libro):
         # Cerrar el cursor
         if cur: cur.close()
 
+# Obtener la calificacion que un usuario le ha dado a un libro
+@book_bp.route('/book/<int:id_libro>/rating/<int:id_usuario>', methods=['GET'])
+def getUserRating(id_libro, id_usuario):
+    from app import mysql
+    cur = None
+    try:
+        # Obtener la conexión a la base de datos
+        cur = mysql.connection.cursor()
+
+        # Consultar la calificación del usuario para el libro
+        cur.execute("SELECT puntaje FROM Calificacion_Usuario WHERE id_usuario = %s AND id_libro = %s", (id_usuario, id_libro))
+        calificacion = cur.fetchone()
+
+        # Verificar si se encontró la calificación
+        if not calificacion:
+            return jsonify({'message': 'No se encontró la calificación del usuario para este libro'}), 404
+        
+        return jsonify({'puntaje': calificacion['puntaje']}), 200
+    except Exception as err:
+        print(f"Error al obtener la calificación del usuario: {err}")
+        return jsonify({'message': f'Error interno del servidor: {str(err)}'}), 500
+    finally:
+        if cur: cur.close()
+
 # Calificar un libro
 @book_bp.route('/book/<int:id_libro>/rate', methods=['POST'])
 def rateBook(id_libro):

@@ -19,7 +19,7 @@
                         <h6>Califica este libro:</h6>
                         <div class="input-group">
                             <select v-model="calificacion" class="form-select">
-                                <option disabled value="">Selecciona una calificación</option>
+                                <option disabled :value="null">Selecciona una calificación</option>
                                 <option v-for="n in 10" :key="n" :value="n">{{ n }}</option>
                             </select>
                             <button @click="calificarLibro" class="btn ml-primary-btn">Calificar</button>
@@ -139,8 +139,8 @@ import Navbar from '@/components/nav/Navbar.vue';
 import Footer from '@/components/pageFooter/Footer.vue';
 import EditRecord from '@/components/edit/EditRecord.vue';
 import HomeCard from '@/components/cards/HomeCard.vue';
-import { ref, onMounted } from 'vue';
-import { getBook, getTagsIdBook, getGenresById, rateBook, getSimilarBooks } from '@/api/api';
+import { ref, onMounted, watch } from 'vue';
+import { getBook, getTagsIdBook, getGenresById, rateBook, getSimilarBooks, getUserRating } from '@/api/api';
 import { useRoute, useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/token';
 import type { Book } from '@/types/types';
@@ -156,9 +156,8 @@ const calificacion = ref<number | null>(null);
 const authStore = useAuthStore();
 const similares = ref<Book[]>([]);
 
-
 // Obtener el ID del libro desde la ruta
-const idLibro = Number(route.params.id);
+const idLibro = ref(Number(route.params.id));
 
 function getPortadaUrl(portada: string | undefined): string {
   if (!portada) return 'https://demuseo.com/wp-content/uploads/woocommerce-placeholder.png';
@@ -211,10 +210,10 @@ async function calificarLibro() {
     }
 }
 
-onMounted(async () => {
+async function loadBook() {
     try {
         // Obtener el libro
-        const resLibro = await getBook(idLibro);
+        const resLibro = await getBook(idLibro.value);
         if (resLibro.status !== 200) throw new Error('No se pudo obtener el libro');
         libro.value = resLibro.data;
 
@@ -222,30 +221,47 @@ onMounted(async () => {
         document.title = libro.value && libro.value.titulo ? `Libro - ${libro.value.titulo}` : 'Libro';
 
         // Obtener etiquetas del libro
-        const resEtiquetas = await getTagsIdBook(idLibro);
+        const resEtiquetas = await getTagsIdBook(idLibro.value);
         if (resEtiquetas.status === 200) {
             etiquetas.value = resEtiquetas.data;
         }
 
         // Obtener géneros del libro
-        const resGeneros = await getGenresById(idLibro);
+        const resGeneros = await getGenresById(idLibro.value);
         if (resGeneros.status === 200) {
             generos.value = resGeneros.data;
         }
 
         // Obtener libros similares
-        const resSimilares = await getSimilarBooks(idLibro);
+        const resSimilares = await getSimilarBooks(idLibro.value);
         if (resSimilares.status === 200) {
             // Mostrar 10 aleatorios
             const shuffled = resSimilares.data.sort(() => 0.5 - Math.random());
             similares.value = shuffled.slice(0, 10);
         }
         
-    } catch (e) {
-        console.error(e);
+        // Obtener calificacion del usuario
+        calificacion.value = null;
+        if (authStore.token && libro.value?.id_libro) {
+            const resRating = await getUserRating(libro.value.id_libro, authStore.user.id);
+            if (resRating.status === 200) {
+                calificacion.value = Number(resRating.data.puntaje);
+            }
+        }
+    } catch (err) {
+        console.error('Error al cargar el libro:', err);
     }
+}
 
-    
+onMounted(async () => {
+    await loadBook();
+});
+
+watch(() => route.params.id, async newId => {
+    if (newId) {
+        idLibro.value = Number(newId);
+        await loadBook();
+    }
 });
 </script>
 

@@ -106,6 +106,10 @@ export async function getSimilarBooks(id_libro: number) {
     return GETRequest(`/books/${id_libro}/similar`);
 }
 
+export async function getUserRating(id_libro: number, id_usuario: number) {
+    return GETRequest(`/book/${id_libro}/rating/${id_usuario}`);
+}
+
 /*
     POST
 */
