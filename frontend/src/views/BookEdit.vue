@@ -86,7 +86,7 @@ import SecondFormNovel from '@/components/book_forms/SecondFormNovel.vue';
 import SecondFormManga from '@/components/book_forms/SecondFormManga.vue';
 import ThirdForm from '@/components/book_forms/ThirdForm.vue';
 import Footer from '@/components/pageFooter/Footer.vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { ref, onMounted, computed} from 'vue';
 import { getBook, getGenresById, getTagsIdBook, updateBook, updateBookGenres,updateBookTags } from '@/api/api';
 import { useAuthStore } from '@/stores/token';
@@ -105,6 +105,7 @@ const generos = ref<any[]>([]);
 const authStore = useAuthStore();
 const idUsuario = authStore.user.id;
 const mostrarModal = ref(false);
+const router = useRouter();
 
 onMounted(async () => {
     try {
@@ -185,6 +186,7 @@ async function confirmarGuardar() {
     });
     console.log('Etiquetas a guardar', etiquetas.value);
     alert('¡Cambios guardados correctamente!');
+    router.push({ name: 'bookView', params: { id: idLibro } }); // Redirige al libro editado
   } catch (e) {
     alert('Ocurrió un error al guardar los cambios.');
     console.error(e);

@@ -18,8 +18,35 @@
                     </div>
                 </div>
                 <div class ="message-info-container">
+                    <p> 
+                        Existen diferentes tipos de lecturas disponibles en esta página.
+                         <br>
+                            <br>
+                    </p>
                     <div class="message-info" v-show="secciones.tipoLectura">
-                        <p>Información adicional sobre esta sección.</p>
+                        <p>
+                            <b>Libros</b> son lecturas que pueden ser de cualquier género y son el formato más común.
+                            Libros como Harry Potter y El Señor de los Anillos caen en esta categoría.
+                            <br>
+                            <br>
+                            <b>Novelas asiaticas</b> son lecturas que provienen de Asia, como novelas ligeras y novelas web.
+                            Poseen un formato de capítulos, los cuales son publicados periódicamente en línea o de forma física.
+                            Novelas como Re:Zero, Sword Art Online y Solo Leveling son ejemplos de novelas asiaticas.
+                            <br>
+                            <br>
+                            <b>Manga</b> son lecturas que provienen de Japón y son un formato de cómic japonés.
+                            Los mangas son publicados en formato de capítulos y volumenes, los cuales son publicados periódicamente en línea o de forma física.
+                            Mangas como One Piece, Naruto y Attack on Titan son ejemplos de mangas.
+                            <br>
+                            <br>
+                            Por favor, seleccione el tipo de lectura que desea agregar y 
+                            verifique que la información es correcta ya que <b>esta información no
+                            podrá ser editada una vez que el libro haya sido guardado en nuestra página.</b>
+                            <br>
+                            <br>
+                            Una vez que se haya seleccionado el tipo de lectura,
+                            se habilitarán las siguientes secciones para ingresar los datos del libro.
+                        </p>
                     </div>
                 </div>
             </div>
@@ -41,8 +68,26 @@
                     </div>
                 </div>
                 <div class ="message-info-container">
+                    <p> 
+                        Datos del libro como título y autor se deben ingresar en esta sección.
+                         <br>
+                            <br>
+                    </p>
                     <div class="message-info" v-show="secciones.ingresarDatos">
-                        <p>Información adicional sobre esta sección.</p>
+                        <p>Ciertos datos son necesarios al momento de agregar un libro.
+                            Por favor, asegurarse que <b>Título, Autor, Idioma, Sinopsis, Portada,
+                            Artista (si es un manga)</b> esten correctamente ingresados para que 
+                            el libro pueda ser agregado.
+                            <br>
+                            <br>
+                            Los campos que no son obligatorios pueden ser dejados en blanco si no se tiene
+                            la información disponible, los cuales podrán ser editados posteriormente
+                            desde la vista del libro.
+                            <br>
+                            <br>
+                            Una vez que se hayan ingresado los datos del libro, se habilitará la siguiente sección
+                            para seleccionar los géneros y etiquetas del libro.
+                        </p>
                     </div>
                 </div>
             </div>
@@ -62,14 +107,39 @@
                     </div>
                 </div>
                 <div class ="message-info-container">
+                    <p> 
+                        Géneros y etiquetas son importantes para categorizar el libro y 
+                        facilitar su búsqueda en la plataforma.
+                         <br>
+                        <br>
+                    </p>
                     <div class="message-info" v-show="secciones.seleccionarCategorias">
-                        <p>Información adicional sobre esta sección.</p>
+                        <p> Etiquetas son una forma de entregar información adicional sobre la lectura
+                            sin dar datos específicos de esta. <b>Facilita el poder escoger una lectura que se ajuste a los gustos del usuario
+                            y alertar sobre temas que pueden ser sensibles para el lector.</b>
+                            <br>
+                            <br>
+                            Por favor, seleccione los géneros y etiquetas que mejor describan 
+                            el libro y <b>se puede seleccionar múltiples de ellos.</b>
+                            <br>
+                            <br>
+                            En caso de no saber de que se trata alguno de ellos, <b>mantener el 
+                            cursor sobre el nombre del género o etiqueta
+                            mostrará una breve descripción.</b>
+                            <br>
+                            <br>
+                            Y si no se encuentra el género o etiqueta deseada, 
+                            no se preocupe, constamente estamos agregando nuevos géneros y etiquetas a la plataforma
+                            para facilitar la búsqueda de nuevas lecturas a nuestros usuarios.
+                            Recordar que es posible editar la información de las lecturas una vez que estas hayan sido guardadas.
+                            
+                        </p>
                     </div>
                 </div>
             </div>
             <!-- Botón final -->
             <div class="save-button">
-                <button @click="enviarTodo" :disabled="!secciones.seleccionarCategoriasGuardado">
+                <button class = "btn ml-primary-btn mt-2 "@click="enviarTodo" :disabled="!secciones.seleccionarCategoriasGuardado">
                     Guardar todo
                 </button>
             </div>
@@ -92,6 +162,7 @@ import SecondFormNovel from '@/components/book_forms/SecondFormNovel.vue';
 import SecondFormManga from '@/components/book_forms/SecondFormManga.vue';
 import ThirdForm from '@/components/book_forms/ThirdForm.vue';
 import Footer from '@/components/pageFooter/Footer.vue';
+import router from '@/router';
 
 const tipoSeleccionado = ref('');
 const firstFormData = ref<Record<string, any>>({});
@@ -232,6 +303,7 @@ async function enviarTodo() {
         console.log('Etiquetas asociadas correctamente.');
 
         alert('Libro, géneros y etiquetas guardados correctamente.');
+        router.push({ name: 'home' }); // Redirige a Home
     } catch (error) {
         console.error('Ocurrió un error:', error);
         alert('Ocurrió un error al guardar los datos. Por favor, intente nuevamente.');
@@ -257,7 +329,10 @@ async function enviarTodo() {
     max-width: 100%;
     width: 100%;
     padding: 0 2rem;
+    text-align: justify;
 }
+
+
 
 .message-box {
     text-align: center;
@@ -302,6 +377,8 @@ async function enviarTodo() {
     box-sizing: border-box;
     border-radius: 8px; 
     padding: 1.5rem;
+    font-size: 14px;
+    text-align: justify;
 }
 
 .message-info-container p {

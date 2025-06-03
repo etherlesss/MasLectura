@@ -117,7 +117,8 @@ const camposRequeridosCompletos = computed(() =>
     titulo.value.trim() !== '' &&
     autor.value.trim() !== '' &&
     idioma.value.trim() !== '' &&
-    sinopsis.value.trim() !== '' 
+    sinopsis.value.trim() !== '' &&
+    portadaFile.value !== null 
 );
 
 function onFileChange(event: Event) {
