@@ -42,3 +42,21 @@ def delete_user(id_usuario):
     except Exception as e:
         print(f"Error al eliminar usuario: {e}")
         return jsonify({'error': 'Error interno al eliminar usuario'}), 500
+    
+
+@user_bp.route('/user/<int:id_usuario>/nombre', methods=['PATCH'])
+def update_user_name(id_usuario):
+    from app import mysql
+    data = request.get_json()
+    nuevo_nombre = data.get('nombre_usuario')
+    if not nuevo_nombre:
+        return jsonify({'message': 'Falta el nombre de usuario'}), 400
+    try:
+        cur = mysql.connection.cursor()
+        cur.execute("UPDATE usuario SET nombre_usuario = %s WHERE id_usuario = %s", (nuevo_nombre, id_usuario))
+        mysql.connection.commit()
+        cur.close()
+        return jsonify({'message': 'Nombre de usuario actualizado'}), 200
+    except Exception as e:
+        print(f"Error al actualizar nombre de usuario: {e}")
+        return jsonify({'error': 'Error interno al actualizar nombre de usuario'}), 500

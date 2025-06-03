@@ -8,8 +8,17 @@
                         🗑️
                 </button>
             </div>
-            <div>
-                <p><b>Nombre de usuario:</b> {{ user?.nombre_usuario }}</p>
+            <div >
+                <p><b>Nombre de usuario:</b> {{ user?.nombre_usuario }} 
+                    <button
+                        v-if="rolUsuario === 'Administrador'"
+                        class="edit-icon"
+                        @click="abrirModalEditarUsuario"
+                        style="margin-left: 8px;"
+                        title="Editar nombre de usuario"
+                        >[Editar]
+                    </button>
+                </p>
                 <p><b>Correo electrónico:</b> {{ user?.mail_usuario }}</p>
                 <p><b>Género: </b> {{ user?.genero_usuario }}</p>
                 <p><b>Fecha de nacimiento:</b> {{ formatDate(user?.fecha_nacimiento || '') }}</p>
@@ -28,6 +37,19 @@
                 <button @click="mostrarModalBorrarUsuario = false" class="btn btn-secondary">Cancelar</button>
             </div>
         </div>
+        <div v-if="mostrarModalEditarUsuario" class="modal-backdrop">
+        <div class="modal-confirm">
+            <h4>Editar nombre de usuario</h4>
+            <input
+            v-model="nuevoNombreUsuario"
+            class="form-control"
+            placeholder="Nuevo nombre de usuario"
+            style="margin-bottom: 1rem;"
+            />
+            <button @click="editarNombreUsuario" class="btn btn-primary">Guardar</button>
+            <button @click="mostrarModalEditarUsuario = false" class="btn btn-secondary" style="margin-left: 1rem;">Cancelar</button>
+        </div>
+        </div>
     </main>
     <ChangePwdModal />
     <Footer />
@@ -38,7 +60,7 @@ import Navbar from '@/components/nav/Navbar.vue';
 import Footer from '@/components/pageFooter/Footer.vue';
 import { onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { getProfile, getUserLists, getUserRole, deleteUser } from '@/api/api';
+import { getProfile, getUserLists, getUserRole, deleteUser, updateUserName } from '@/api/api';
 import { formatDate } from '@/util/formatters';
 import type { User, List } from '@/types/types';
 import ListCard from '@/components/cards/ListCard.vue';
@@ -53,6 +75,8 @@ const router = useRouter();
 const authStore = useAuthStore();
 const idUsuario = Number(route.params.id);
 const mostrarModalBorrarUsuario = ref(false);
+const mostrarModalEditarUsuario = ref(false);
+const nuevoNombreUsuario = ref('');
 
 // Redirección si el usuario es el mismo que el autenticado
 if (idUsuario === Number(authStore.user.id)) {
@@ -66,6 +90,40 @@ async function cargarRolUsuario() {
 
 function abrirModalBorrarUsuario() {
   mostrarModalBorrarUsuario.value = true;
+}
+
+function abrirModalEditarUsuario() {
+  nuevoNombreUsuario.value = user.value?.nombre_usuario || '';
+  mostrarModalEditarUsuario.value = true;
+}
+
+async function editarNombreUsuario() {
+  if (!nuevoNombreUsuario.value.trim()) {
+    alert('El nombre de usuario no puede estar vacío.');
+    return;
+  }
+  try {
+    // Llama a tu API para editar el nombre de usuario
+    const res = await updateUserName(idUsuario, nuevoNombreUsuario.value);
+    if (res && res.status === 200) {
+      if (user.value) {
+        user.value = {
+          id_usuario: user.value.id_usuario,
+          nombre_usuario: nuevoNombreUsuario.value,
+          mail_usuario: user.value.mail_usuario,
+          genero_usuario: user.value.genero_usuario,
+          rol: user.value.rol,
+          fecha_nacimiento: user.value.fecha_nacimiento
+        };
+      }
+      mostrarModalEditarUsuario.value = false;
+      alert('Nombre de usuario actualizado');
+    } else {
+      alert('Error al actualizar el nombre de usuario');
+    }
+  } catch (err) {
+    alert('Error al actualizar el nombre de usuario');
+  }
 }
 
 async function borrarUsuario() {
@@ -142,5 +200,20 @@ p {
   text-align: center;
   min-width: 300px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.edit-icon {
+    border: none;
+    background: none;
+    color: #252525;
+    font-size: 0.9rem;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    font-family: inherit;
+    vertical-align: middle;
+}
+.edit-icon:hover {
+    text-decoration: underline;
 }
 </style>

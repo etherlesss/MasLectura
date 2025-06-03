@@ -41,7 +41,6 @@ import { addComment, getCommentsByBook, deleteComment, getUserRole, getProfile }
 const userRaw = localStorage.getItem('user');
 const idUsuario = userRaw ? JSON.parse(userRaw).id : null;
 const props = defineProps<{ idLibro: number}>();
-console.log('props:', props);
 const comentario = ref('');
 const comentariosLibro = ref<{nombre_usuario: string, descripcion: string, id_usuario: number, id_comentario?: number }[]>([]);
 const rolUsuario = ref<string | null>(null);

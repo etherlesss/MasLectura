@@ -98,3 +98,12 @@ CREATE TABLE Libro_Etiquetas (
     CONSTRAINT libro_etiquetas_libro_fk FOREIGN KEY (id_libro) REFERENCES Libro(id_libro),
     CONSTRAINT libro_etiquetas_etiquetas_fk FOREIGN KEY (id_etiquetas) REFERENCES Etiqueta(id_etiqueta)
 );
+
+CREATE TABLE Edicion (
+    id_edicion INT PRIMARY KEY AUTO_INCREMENT,
+    id_libro INT NOT NULL,
+    id_usuario INT NOT NULL,
+    tiempo DATETIME NOT NULL,
+    CONSTRAINT edicion_libro_fk FOREIGN KEY (id_libro) REFERENCES Libro(id_libro),
+    CONSTRAINT edicion_usuario_fk FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario)
+);

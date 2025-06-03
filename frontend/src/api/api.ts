@@ -91,6 +91,10 @@ export async function getRecommendations(id_usuario: number) {
 export async function getUserRole(id_usuario: number) {
   return GETRequest(`/user/role/${id_usuario}`);
 }
+
+export async function getEditHistory(id_libro: number) {
+    return GETRequest(`/book/${id_libro}/edit-history`);
+}
 /*
     POST
 */
@@ -209,6 +213,9 @@ export async function updateBookGenres(id_libro: number, data: any) {
 
 export async function updateBookTags(id_libro: number, data: any) {
     return axios.put(`${url}/book_tag/edit/${id_libro}`, data, config);
+}
+export async function updateUserName(id_usuario: number, nombre_usuario: string) {
+  return await PATCHRequest(`/user/${id_usuario}/nombre`, { nombre_usuario });
 }
 
 

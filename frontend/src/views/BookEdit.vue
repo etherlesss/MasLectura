@@ -81,16 +81,15 @@
 
 <script setup lang="ts">
 import Navbar from '@/components/nav/Navbar.vue';
-import FirstForm from '@/components/book_forms/FirstForm.vue';
 import SecondFormBook from '@/components/book_forms/SecondFormBook.vue';
 import SecondFormNovel from '@/components/book_forms/SecondFormNovel.vue';
 import SecondFormManga from '@/components/book_forms/SecondFormManga.vue';
 import ThirdForm from '@/components/book_forms/ThirdForm.vue';
 import Footer from '@/components/pageFooter/Footer.vue';
 import { useRoute } from 'vue-router';
-import { useAuthStore } from '@/stores/token';
 import { ref, onMounted, computed} from 'vue';
 import { getBook, getGenresById, getTagsIdBook, updateBook, updateBookGenres,updateBookTags } from '@/api/api';
+import { useAuthStore } from '@/stores/token';
 
 
 // Recibe los datos enviados desde BookView
@@ -98,13 +97,13 @@ const route = useRoute();
 const idLibro = Number(route.params.id);
 
 const tipoSeleccionado = ref('');
-const firstFormData = ref<Record<string, any>>({});
 const secondFormData = ref<Record<string, any>>({});
 const thirdFormData = ref<Record<string, any>>({});
 const libro = ref<Record<string, any>>({});
 const etiquetas = ref<any[]>([]);
 const generos = ref<any[]>([]);
-
+const authStore = useAuthStore();
+const idUsuario = authStore.user.id;
 const mostrarModal = ref(false);
 
 onMounted(async () => {
@@ -170,6 +169,7 @@ async function confirmarGuardar() {
     // 1. Actualizar libro
     const responseLibro = await updateBook(idLibro, {
       ...secondFormData.value,
+      id_usuario: idUsuario,
     });
     console.log('Datos del libro a actualizar:', secondFormData.value);
     if (responseLibro.status !== 200) throw new Error('Error al actualizar el libro');

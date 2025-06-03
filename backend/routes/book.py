@@ -1,5 +1,6 @@
 # Importar dependencias
 from flask import Blueprint, jsonify, request
+from datetime import datetime
 
 # Crear un objeto Blueprint para la ruta de libros
 book_bp = Blueprint('book', __name__)
@@ -248,9 +249,42 @@ def updateBook(id_libro):
             (*valores, id_libro)
         )
         mysql.connection.commit()
+        
+        # Registrar la edición del libro
+        id_usuario = data.get('id_usuario')
+        if id_usuario:
+            tiempo = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            cur.execute(
+                "INSERT INTO Edicion (id_libro, id_usuario, tiempo) VALUES (%s, %s, %s)",
+                (id_libro, id_usuario, tiempo)
+            )
+            mysql.connection.commit()
         return jsonify({'message': 'Libro actualizado correctamente'}), 200
     except Exception as err:
         print(f"Error al actualizar el libro: {err}")
         return jsonify({'message': f'Error interno del servidor: {err}'}), 500
     finally:
         if cur: cur.close()
+
+
+#Edicion libro por id
+@book_bp.route('/book/<int:id_libro>/edit-history', methods=['GET'])
+def get_edit_history(id_libro):
+    from app import mysql
+    cur = mysql.connection.cursor()
+    try:
+        cur.execute("""
+            SELECT e.tiempo, u.nombre_usuario
+            FROM edicion e
+            JOIN usuario u ON e.id_usuario = u.id_usuario
+            WHERE e.id_libro = %s
+            ORDER BY e.tiempo DESC
+        """, (id_libro,))
+        rows = cur.fetchall()
+        historial = [{'tiempo': row['tiempo'], 'nombre_usuario': row['nombre_usuario']} for row in rows]
+        return jsonify({'historial': historial}), 200
+    except Exception as e:
+        print(f"Error al obtener historial de ediciones: {e}")
+        return jsonify({'error': 'Error interno'}), 500
+    finally:
+        cur.close()

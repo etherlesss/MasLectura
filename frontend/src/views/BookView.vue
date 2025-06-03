@@ -92,7 +92,10 @@
             <div class="right-container">
                 <div class="book-edit">
                     <div class="info-edit">
-                        <h6>Informacion edicion</h6>
+                        <h6><EditRecord
+                        v-if="libro && libro.id_libro"
+                        :id-libro="libro.id_libro"
+                        /></h6>
                     </div>
                     <div class="button-edit" v-if="authStore.token">
                         <button type="button" class="btn" @click="irAEditar">✏️ Editar</button>
@@ -137,6 +140,7 @@ import Comments from '@/components/comments/Comments.vue';
 import AddToList from '@/components/list/AddToList.vue';
 import Navbar from '@/components/nav/Navbar.vue';
 import Footer from '@/components/pageFooter/Footer.vue';
+import EditRecord from '@/components/edit/EditRecord.vue';
 import { ref, onMounted } from 'vue';
 import { getBook, getTagsIdBook, getGenresById, rateBook } from '@/api/api';
 import { useRoute, useRouter } from 'vue-router';
@@ -152,6 +156,7 @@ const backendUrl = 'http://127.0.0.1:3307/api/';
 const router = useRouter();
 const calificacion = ref<number | null>(null);
 const authStore = useAuthStore();
+
 
 // Obtener el ID del libro desde la ruta
 const idLibro = Number(route.params.id);
