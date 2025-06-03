@@ -110,6 +110,10 @@ export async function getUserRating(id_libro: number, id_usuario: number) {
     return GETRequest(`/book/${id_libro}/rating/${id_usuario}`);
 }
 
+export async function getBookRatingCount(id_libro: number) {
+    return GETRequest(`/book/${id_libro}/ratings/count`);
+}
+
 /*
     POST
 */

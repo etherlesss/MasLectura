@@ -4,8 +4,9 @@
         <div class="book-view">
             <!-- Contenedor izquierdo-->
             <div class="left-container">
-                <div class ="calification-container">
-                    Promedio: {{ libro?.promedio || 'Desconocido' }} 
+                <div class="calification-container d-flex align-items-baseline">
+                    <span>Promedio: {{ libro?.promedio || 'Desconocido' }}</span>
+                    <span style="font-size: .8rem;">/{{ ratingCount }} Calificaciones</span>
                 </div>
                 <div class="card cover">
                     <img :src="getPortadaUrl(libro?.portada)" class="cover-img-top" alt="Portada">
@@ -140,7 +141,7 @@ import Footer from '@/components/pageFooter/Footer.vue';
 import EditRecord from '@/components/edit/EditRecord.vue';
 import HomeCard from '@/components/cards/HomeCard.vue';
 import { ref, onMounted, watch } from 'vue';
-import { getBook, getTagsIdBook, getGenresById, rateBook, getSimilarBooks, getUserRating } from '@/api/api';
+import { getBook, getTagsIdBook, getGenresById, rateBook, getSimilarBooks, getUserRating, getBookRatingCount } from '@/api/api';
 import { useRoute, useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/token';
 import type { Book } from '@/types/types';
@@ -155,6 +156,7 @@ const router = useRouter();
 const calificacion = ref<number | null>(null);
 const authStore = useAuthStore();
 const similares = ref<Book[]>([]);
+const ratingCount = ref<number>(0);
 
 // Obtener el ID del libro desde la ruta
 const idLibro = ref(Number(route.params.id));
@@ -219,6 +221,12 @@ async function loadBook() {
 
         // Settear el título de la pagina como el libro obtenido
         document.title = libro.value && libro.value.titulo ? `Libro - ${libro.value.titulo}` : 'Libro';
+
+        // Obtener cantidad de calificaciones
+        const resCantidad = await getBookRatingCount(idLibro.value);
+        if (resCantidad.status === 200) {
+            ratingCount.value = resCantidad.data.count;
+        }
 
         // Obtener etiquetas del libro
         const resEtiquetas = await getTagsIdBook(idLibro.value);

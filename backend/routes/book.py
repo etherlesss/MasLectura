@@ -263,6 +263,30 @@ def getUserRating(id_libro, id_usuario):
     finally:
         if cur: cur.close()
 
+# Obtener cantidad de calificaciones de un libro
+@book_bp.route('/book/<int:id_libro>/ratings/count', methods=['GET'])
+def getBookRatingCount(id_libro):
+    from app import mysql
+    cur = None
+    try:
+        # Obtener la conexión a la base de datos
+        cur = mysql.connection.cursor()
+
+        # Consultar la cantidad de calificaciones del libro
+        cur.execute("SELECT COUNT(*) as count FROM Calificacion_Usuario WHERE id_libro = %s", (id_libro,))
+        count = cur.fetchone()
+
+        # Verificar si se encontró la cantidad de calificaciones
+        if not count:
+            return jsonify({'message': 'No se encontraron calificaciones para este libro'}), 404
+        
+        return jsonify({'count': count['count']}), 200
+    except Exception as err:
+        print(f"Error al obtener la cantidad de calificaciones del libro: {err}")
+        return jsonify({'message': f'Error interno del servidor: {str(err)}'}), 500
+    finally:
+        if cur: cur.close()
+
 # Calificar un libro
 @book_bp.route('/book/<int:id_libro>/rate', methods=['POST'])
 def rateBook(id_libro):
