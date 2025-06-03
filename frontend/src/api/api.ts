@@ -45,15 +45,19 @@ export async function getTags() {
 export async function getBook(id: number) {
     return GETRequest(`/book/${id}`);
 }
+
 export async function getGenres() {
     return GETRequest('/genre');
 }
+
 export async function geBookGenres() {
     return GETRequest('/book_genre');
 }
+
 export async function getGenresById(id: number) {
     return GETRequest(`/book_genre/${id}`);
 }
+
 export async function getBookTags() {
     return GETRequest('/book_tag');
 }
@@ -81,6 +85,7 @@ export async function getListFirstBook(id_lista: number) {
 export async function getListBooks(id_lista: number) {
     return GETRequest(`/list/${id_lista}/books`);
 }
+
 export async function getCommentsByBook(id_libro: number) {
     return GETRequest(`/comentario/${id_libro}`);
 }
@@ -88,6 +93,7 @@ export async function getCommentsByBook(id_libro: number) {
 export async function getRecommendations(id_usuario: number) {
     return GETRequest(`/recommend?id_usuario=${id_usuario}`);
 }
+
 export async function getUserRole(id_usuario: number) {
   return GETRequest(`/user/role/${id_usuario}`);
 }
@@ -95,6 +101,11 @@ export async function getUserRole(id_usuario: number) {
 export async function getEditHistory(id_libro: number) {
     return GETRequest(`/book/${id_libro}/edit-history`);
 }
+
+export async function getSimilarBooks(id_libro: number) {
+    return GETRequest(`/books/${id_libro}/similar`);
+}
+
 /*
     POST
 */
@@ -171,7 +182,6 @@ export async function addBookToList(data: { id_lista: number, id_libro: number }
   return POSTRequest('/list/add-book', data);
 }
 
-
 /*
     PATCH
 */
@@ -204,9 +214,11 @@ export async function updatePassword(id_usuario: number, data: any) {
 export async function updateList(id_lista: number, data: any) {
     return PATCHRequest(`/list/${id_lista}`, data);
 }
+
 export async function updateBook(id_libro: number, data: any) {
     return axios.patch(`${url}/book/edit/${id_libro}`, data, config);
 }
+
 export async function updateBookGenres(id_libro: number, data: any) {
     return axios.put(`${url}/book_genre/edit/${id_libro}`, data, config);
 }
@@ -217,8 +229,6 @@ export async function updateBookTags(id_libro: number, data: any) {
 export async function updateUserName(id_usuario: number, nombre_usuario: string) {
   return await PATCHRequest(`/user/${id_usuario}/nombre`, { nombre_usuario });
 }
-
-
 
 /*
     DELETE
@@ -247,6 +257,7 @@ export async function deleteList(id_lista: number) {
 export async function deleteComment(id_comentario: number) {
     return DELETERequest(`/comentario/${id_comentario}`);
 }
+
 export async function deleteUser(id_usuario: number) {
     return DELETERequest(`/user/${id_usuario}`);
 }

@@ -193,6 +193,52 @@ def getBook(id_libro):
     finally:
         if cur: cur.close()
 
+# Obtener libros similares por género
+@book_bp.route('/books/<int:id_libro>/similar', methods=['GET'])
+def getSimilarBooks(id_libro):
+    from app import mysql
+    cur = None
+    try: 
+        # Obtener la conexión a la base de datos
+        cur = mysql.connection.cursor()
+
+        # Consultar generos del libro
+        cur.execute("""
+            SELECT g.id_genero FROM libro l
+            INNER JOIN Libro_Genero lg ON l.id_libro = lg.id_libro
+            INNER JOIN Genero g ON lg.id_genero = g.id_genero
+            WHERE l.id_libro = %s
+        """, (id_libro,))
+        generos = cur.fetchall()
+
+        # Verificar si se encontraron géneros
+        if not generos:
+            return jsonify({'message': 'No se encontraron géneros para el libro'}), 404
+        
+        # Obtener los IDs de los géneros
+        ids_generos = [genero['id_genero'] for genero in generos]
+
+        # Consultar libros similares por género
+        cur.execute("""
+            SELECT * FROM libro l
+            INNER JOIN Libro_Genero lg ON l.id_libro = lg.id_libro
+            WHERE lg.id_genero IN %s AND l.id_libro != %s
+        """, (tuple(ids_generos), id_libro))
+        libros_similares = cur.fetchall()
+
+        # Verificar si se encontraron libros similares
+        if not libros_similares:
+            return jsonify({'message': 'No se encontraron libros similares'}), 404
+        
+        # Respuesta de éxito
+        return jsonify(libros_similares), 200
+    except Exception as err:
+        print(f"Error al obtener libros similares: {err}")
+        return jsonify({'message': f'Error interno del servidor: {str(err)}'}), 500
+    finally:
+        # Cerrar el cursor
+        if cur: cur.close()
+
 # Calificar un libro
 @book_bp.route('/book/<int:id_libro>/rate', methods=['POST'])
 def rateBook(id_libro):

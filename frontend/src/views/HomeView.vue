@@ -74,8 +74,8 @@ async function fetchRecommendations() {
             if (res.status === 200) {
                 // Filtrar los libros recomendados que ya están en la lista de libros
                 const recommendedBooks = res.data
-                    .map(rec => books.value.find(book => book.id_libro === rec.id_libro))
-                    .filter(book => !!book); // Eliminar undefined
+                    .map((rec: any) => books.value.find(book => book.id_libro === rec.id_libro))
+                    .filter((book: any) => !!book); // Eliminar undefined
 
                 // Tomar 10 del pool
                 const shuffled = recommendedBooks.sort(() => 0.5 - Math.random());

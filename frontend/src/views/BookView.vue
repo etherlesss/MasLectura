@@ -7,8 +7,8 @@
                 <div class ="calification-container">
                     Promedio: {{ libro?.promedio || 'Desconocido' }} 
                 </div>
-                <div class="card">
-                    <img :src="getPortadaUrl(libro?.portada)" class="card-img-top" alt="Portada">
+                <div class="card cover">
+                    <img :src="getPortadaUrl(libro?.portada)" class="cover-img-top" alt="Portada">
                 </div>
                 <div class="information-container" v-if="libro">
                     <h5 class="info">Titulo: {{ libro?.titulo || 'Desconocido'}} </h5>
@@ -117,11 +117,8 @@
                 <hr class="linea-centro">
                 <div class ="similar-books">
                     <h4>Libros similares</h4>
-                    <div class="similar-books-row">
-                        <div class="similar-card" v-for="n in 5" :key="n">
-                            <img src="https://demuseo.com/wp-content/uploads/woocommerce-placeholder.png" alt="Portada" class="similar-card-img">
-                            <div class="similar-card-title">Libro {{ n }}</div>
-                        </div>
+                    <div class="card-scroll">
+                        <HomeCard v-for="book in similares" :key="book.id_libro" :book="book" />
                     </div>
                 </div>
                 <hr class="linea-centro">
@@ -141,8 +138,9 @@ import AddToList from '@/components/list/AddToList.vue';
 import Navbar from '@/components/nav/Navbar.vue';
 import Footer from '@/components/pageFooter/Footer.vue';
 import EditRecord from '@/components/edit/EditRecord.vue';
+import HomeCard from '@/components/cards/HomeCard.vue';
 import { ref, onMounted } from 'vue';
-import { getBook, getTagsIdBook, getGenresById, rateBook } from '@/api/api';
+import { getBook, getTagsIdBook, getGenresById, rateBook, getSimilarBooks } from '@/api/api';
 import { useRoute, useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/token';
 import type { Book } from '@/types/types';
@@ -156,6 +154,7 @@ const backendUrl = 'http://127.0.0.1:3307/api/';
 const router = useRouter();
 const calificacion = ref<number | null>(null);
 const authStore = useAuthStore();
+const similares = ref<Book[]>([]);
 
 
 // Obtener el ID del libro desde la ruta
@@ -233,6 +232,14 @@ onMounted(async () => {
         if (resGeneros.status === 200) {
             generos.value = resGeneros.data;
         }
+
+        // Obtener libros similares
+        const resSimilares = await getSimilarBooks(idLibro);
+        if (resSimilares.status === 200) {
+            // Mostrar 10 aleatorios
+            const shuffled = resSimilares.data.sort(() => 0.5 - Math.random());
+            similares.value = shuffled.slice(0, 10);
+        }
         
     } catch (e) {
         console.error(e);
@@ -260,37 +267,7 @@ onMounted(async () => {
     background-color: #f0f0f0;
 }
 
-.similar-books-row {
-    display: flex;
-    gap: 1rem;
-    justify-content: flex-start;
-    flex-wrap: nowrap;
-}
-
-.similar-card {
-    background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    width: 16rem;
-    padding: 0.5rem;
-    text-align: center;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-}
-
-.similar-card-img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-    border-radius: 4px;
-}
-
-.similar-card-title {
-    margin-top: 0.5rem;
-    font-size: 1rem;
-    font-weight: bold;
-}
-
-.card {
+.cover {
     display: flex;
     margin: 0 auto;
     width: 80%;
@@ -348,6 +325,16 @@ onMounted(async () => {
     text-align: justify;
 }
 
+.card-scroll {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 1rem;
+    padding-bottom: 1rem;
+    scrollbar-width: thin;
+    scrollbar-color: #ccc #f5f5f5;
+}
+
 @media (max-width: 576px) {
     .book-view {
         flex-direction: column;
@@ -359,10 +346,6 @@ onMounted(async () => {
 
     .information-container {
         padding: 2rem 1rem;
-    }
-
-    .similar-books-row {
-        flex-wrap: wrap;
     }
 }
 </style>
