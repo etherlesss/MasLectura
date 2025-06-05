@@ -1,7 +1,7 @@
 <template>
   <div class="select-list">
   <label for="inputList" class="form-label mb-1">Añadir a lista:</label>
-  <select v-model="listaSeleccionada" id="inputLista" class="form-select" @change="onListaSeleccionada">
+  <select v-model="listaSeleccionada" id="inputLista" class="form-select" @change="onListaSeleccionada" :disabled="idUsuario === null || listasUsuario.length === 0">
     <option disabled value="">Selecciona una lista</option>
     <option v-for="lista in listasUsuario" :key="lista.id_lista" :value="lista.id_lista">
       {{ lista.nombre_lista }}
@@ -15,9 +15,9 @@
     <div class="modal-container">
       <h5>¿Estás seguro de añadir este libro a la lista?</h5>
       <p>Lista: <strong>{{ nombreListaSeleccionada }}</strong></p>
-      <div class="modal-footer">
+      <div class="modal-footer d-flex gap-2">
         <button class="btn btn-secondary" @click="cerrarModal">Cancelar</button>
-        <button class="btn btn-primary" @click="guardarLibroEnLista">Guardar</button>
+        <button class="btn btn-success" @click="guardarLibroEnLista">Guardar</button>
       </div>
     </div>
   </div>

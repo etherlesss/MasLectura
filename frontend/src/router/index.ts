@@ -77,6 +77,36 @@ const router = createRouter({
       component: () => import('../views/OtherUserProfile.vue'),
       meta: { requiresAuth: true }
     },
+    {
+      path: '/about',
+      name: 'about',
+      component: () => import('../views/AboutView.vue'),
+      meta: { title: 'Acerca de +Lectura' }
+    },
+    {
+      path: '/under-construction',
+      name: 'under-construction',
+      component: () => import('../views/UnderConstructionView.vue'),
+      meta: { title: 'En construcción' }
+    },
+    {
+      path: '/contact',
+      redirect: '/under-construction',
+    },
+    {
+      path: '/terms',
+      redirect: '/under-construction',
+    },
+    {
+      path: '/policy',
+      redirect: '/under-construction',
+    },
+    // Agarrar los errores 404
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'not-found',
+      component: () => import('../views/NotFoundView.vue'),
+    },
   ],
 })
 

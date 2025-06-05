@@ -4,8 +4,8 @@
         <div class="comments-section">
             <div class="comment-form pb-3">
                 <h6>Deja tu comentario:</h6>
-                <textarea class="form-control" rows="3" placeholder="Escribe tu comentario aquí..." v-model="comentario"></textarea>
-                <button type="button" class="btn ml-primary-btn mt-2" @click="enviarComentario">Enviar</button>
+                <textarea class="form-control" rows="3" placeholder="Escribe tu comentario aquí..." v-model="comentario" :disabled="idUsuario === null"></textarea>
+                <button type="button" class="btn ml-primary-btn mt-2" @click="enviarComentario" :disabled="idUsuario === null">Enviar</button>
             </div>
             <div v-for="(c, i) in comentariosLibro" :key="i" class="comment">
                 <div class="d-flex align-items-center justify-content-between">
@@ -26,8 +26,10 @@
             <div v-if="mostrarModal" class="modal-backdrop">
                 <div class="modal-confirm">
                     <p>¿Estás seguro de que deseas borrar este comentario?</p>
-                    <button @click="confirmarBorrado" class="btn btn-danger">Sí, borrar</button>
-                    <button @click="mostrarModal = false" class="btn btn-secondary">Cancelar</button>
+                    <div class="modal-footer d-flex gap-2">
+                        <button @click="confirmarBorrado" class="btn btn-danger">Sí, borrar</button>
+                        <button @click="mostrarModal = false" class="btn btn-secondary">Cancelar</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -64,7 +66,10 @@ async function cargarComentarios() {
     }
 }
 async function enviarComentario() {
-    if (!comentario.value.trim()) return;
+    if (!comentario.value.trim()) {
+        alert('Por favor, escribe un comentario antes de enviar.');
+        return;
+    }
     console.log({
         id_libro: props.idLibro,
         id_usuario: idUsuario,

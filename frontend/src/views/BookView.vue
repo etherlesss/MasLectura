@@ -19,11 +19,11 @@
                     <div class="rating mt-3">
                         <h6>Califica este libro:</h6>
                         <div class="input-group">
-                            <select v-model="calificacion" class="form-select">
+                            <select v-model="calificacion" class="form-select" :disabled="!authStore.token">
                                 <option disabled :value="null">Selecciona una calificación</option>
                                 <option v-for="n in 10" :key="n" :value="n">{{ n }}</option>
                             </select>
-                            <button @click="calificarLibro" class="btn ml-primary-btn">Calificar</button>
+                            <button @click="calificarLibro" class="btn ml-primary-btn" :disabled="!authStore.token">Calificar</button>
                         </div>
                     </div>
                     <div class="select-list">
