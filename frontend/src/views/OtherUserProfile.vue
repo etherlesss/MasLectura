@@ -66,7 +66,6 @@
             </div>
         </div>
     </main>
-    <ChangePwdModal />
     <Footer />
 </template>
 
@@ -75,7 +74,7 @@ import Navbar from '@/components/nav/Navbar.vue';
 import Footer from '@/components/pageFooter/Footer.vue';
 import { computed, onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { getProfile, getUserLists, getUserRole, deleteUser, updateUserName } from '@/api/api';
+import { getProfile, getUserLists, getUserRole, deleteUser, updateUserName, API_URL } from '@/api/api';
 import { formatDate } from '@/util/formatters';
 import type { User, List } from '@/types/types';
 import ListCard from '@/components/cards/ListCard.vue';
@@ -92,7 +91,6 @@ const idUsuario = Number(route.params.id);
 const mostrarModalBorrarUsuario = ref(false);
 const mostrarModalEditarUsuario = ref(false);
 const nuevoNombreUsuario = ref('');
-const API_BASE_URL = 'http://127.0.0.1:3307/api';
 const defaultProfilePic = 'https://ui-avatars.com/api/?name=Usuario&background=cccccc&color=555555&size=256';
 
 // Computed para la URL de la foto de perfil
@@ -101,7 +99,7 @@ const profilePicUrl = computed(() => {
         if (user.value.foto_perfil.startsWith('http')) {
             return user.value.foto_perfil;
         }
-        return API_BASE_URL + user.value.foto_perfil;
+        return API_URL + user.value.foto_perfil;
     }
     return defaultProfilePic;
 });

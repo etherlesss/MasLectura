@@ -83,7 +83,7 @@
                                 <h6>Número de capítulos: {{ libro?.num_capitulos || 'Desconocido' }}</h6>
                             </li>
                             <li class="details">
-                                <h6>Serie finalizada:{{ libro?.estado.toUpperCase() || 'Desconocido' }}</h6>
+                                <h6>Serie finalizada: {{ libro?.estado.toUpperCase() || 'Desconocido' }}</h6>
                             </li>
                         </ul>
                     </div>
@@ -141,7 +141,7 @@ import Footer from '@/components/pageFooter/Footer.vue';
 import EditRecord from '@/components/edit/EditRecord.vue';
 import HomeCard from '@/components/cards/HomeCard.vue';
 import { ref, onMounted, watch } from 'vue';
-import { getBook, getTagsIdBook, getGenresById, rateBook, getSimilarBooks, getUserRating, getBookRatingCount } from '@/api/api';
+import { getBook, getTagsIdBook, getGenresById, rateBook, getSimilarBooks, getUserRating, getBookRatingCount, API_URL } from '@/api/api';
 import { useRoute, useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/token';
 import type { Book } from '@/types/types';
@@ -151,7 +151,6 @@ const etiquetas = ref<string[]>([]);
 const generos = ref<string[]>([]);
 const route = useRoute();
 const libro = ref<Book | null>(null);
-const backendUrl = 'http://127.0.0.1:3307/api/';
 const router = useRouter();
 const calificacion = ref<number | null>(null);
 const authStore = useAuthStore();
@@ -165,7 +164,7 @@ function getPortadaUrl(portada: string | undefined): string {
   if (!portada) return 'https://demuseo.com/wp-content/uploads/woocommerce-placeholder.png';
   if (portada.startsWith('http')) return portada;
   // Si portada es "/uploads/archivo.jpg", concatena el backendUrl
-  return backendUrl + portada;
+  return API_URL + portada;
 }
 
 function irAEditar() {

@@ -14,7 +14,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue';
-import { getListFirstBook } from '@/api/api';
+import { API_URL, getListFirstBook } from '@/api/api';
 import type { List } from '@/types/types';
 
 // Definir props
@@ -29,7 +29,11 @@ async function fetchListFirstBook(id_lista: number) {
         if (res.status === 404) {
             return 'https://demuseo.com/wp-content/uploads/woocommerce-placeholder.png';
         }
-        return res.data.portada;
+        if (res.data.portada.startsWith('http')) {
+            return res.data.portada;
+        } else {
+            return API_URL + res.data.portada;
+        }
     } catch (err) {
         console.error('Error fetching first book:', err);
         return 'https://demuseo.com/wp-content/uploads/woocommerce-placeholder.png';

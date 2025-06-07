@@ -1,6 +1,6 @@
 <template>
     <div class="card">
-        <img :src="props.book.portada" class="card-img-top pt-3 pi-3" :alt="props.book.titulo" />
+        <img :src="getPortadaUrl(props.book.portada)" class="card-img-top pt-3 pi-3" :alt="props.book.titulo" />
         <div class="card-body">
             <router-link :to="'/book/'+props.book.id_libro" class="subtle-link-styled">
                 <h5 class="card-title">{{ props.book.titulo }}</h5>
@@ -13,9 +13,18 @@
 
 <script setup lang="ts">
 import type { Book } from '@/types/types';
+import { API_URL } from '@/api/api';
 
 // Definir props
 const props = defineProps<{ book: Book }>();
+
+// Obtener la URL de la portada del libro
+function getPortadaUrl(portada: string | undefined): string {
+  if (!portada) return 'https://demuseo.com/wp-content/uploads/woocommerce-placeholder.png';
+  if (portada.startsWith('http')) return portada;
+  // Si portada es "/uploads/archivo.jpg", concatena el backendUrl
+  return API_URL + portada;
+}
 
 </script>
 

@@ -35,11 +35,11 @@
                 <div class="mb-3">
                     <label for="profilePic" class="form-label mb-1">Imagen de perfil</label>
                     <input type="file" class="form-control" id="profilePic" accept="image/*" @change="onFileChange">
-                    <div v-if="previewImg" class="mt-2">
+                    <div v-if="previewImg" class="mt-2 d-flex d-lg-block flex-column align-items-center">
                         <img :src="previewImg" alt="Vista previa" style="max-width: 120px; max-height: 120px; border-radius: 12px;">
                     </div>
                 </div>
-                                <!-- Botón de guardar cambios -->
+                <!-- Botón de guardar cambios -->
                 <button type="submit" class="btn ml-primary-btn float-end">Guardar cambios</button>
             </form>
         </div>

@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 // URL DEL SERVIDOR BACKEND
-const url = 'http://127.0.0.1:3307/api';
+
+const url = API_URL;
 
 const token = localStorage.getItem('token');
 

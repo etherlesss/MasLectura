@@ -1,6 +1,6 @@
 <template>
     <Navbar />
-    <main>
+    <main class="px-3 py-3 py-lg-0">
         <div class="addBook-container d-flex flex-column align-items-center gap-2 p-lg-5 pb-3">
             <div class=" instructions">
                 <h4 class = 'center'>Editar lectura</h4>

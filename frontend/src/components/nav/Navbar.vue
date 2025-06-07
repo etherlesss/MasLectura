@@ -58,19 +58,18 @@
 import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/token';
-import { getProfile } from '@/api/api';
+import { API_URL, getProfile } from '@/api/api';
 
 // Definir variables
 const authStore = useAuthStore();
 const searchQuery = ref<string>('');
 const router = useRouter();
-const API_BASE_URL = 'http://127.0.0.1:3307/api';
 import defaultProfilePic from '@/assets/foto-default.png';
 const userProfile = ref<any>(null);
 
 const profilePicUrl = computed(() => {
     if (userProfile.value && userProfile.value.foto_perfil) {
-        return API_BASE_URL + userProfile.value.foto_perfil;
+        return API_URL + userProfile.value.foto_perfil;
     }
     return defaultProfilePic;
 });

@@ -318,7 +318,7 @@ async function enviarTodo() {
     align-items: flex-start;
     justify-content: center;
     width: 100%;           
-    max-width: 1300px;
+    max-width: 1500px;
     margin: 0 auto;   
 }
 
@@ -331,8 +331,6 @@ async function enviarTodo() {
     padding: 0 2rem;
     text-align: justify;
 }
-
-
 
 .message-box {
     text-align: center;
@@ -359,7 +357,7 @@ async function enviarTodo() {
     display: flex;
     align-items: center;
     width: 100%;
-    max-width: 200px;
+    max-width: 300px;
 }
 
 .button-container button {
@@ -372,7 +370,7 @@ async function enviarTodo() {
 
 .message-info-container {
     background-color: bisque;
-    max-width: 200px;   
+    max-width: 350px;   
     width: 100%; 
     box-sizing: border-box;
     border-radius: 8px; 
@@ -395,6 +393,14 @@ async function enviarTodo() {
 
     .message-container {
         padding: 0 1rem;
+    }
+
+    .message-info-container {
+        max-width: 300px;   
+    }
+
+    .button-container {
+        max-width: 200px;
     }
 }
 </style>

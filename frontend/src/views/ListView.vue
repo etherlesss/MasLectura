@@ -75,7 +75,7 @@ onMounted(async() => {
     await fetchListBooks();
     
     // Settear el título de la pagina como la lista obtenida
-    document.title = `Lista - ${list.value.nombre_lista}` || 'Lista';
+    document.title = `Lista - ${list.value?.nombre_lista}` || 'Lista';
 });
 </script>
 

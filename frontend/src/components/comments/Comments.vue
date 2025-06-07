@@ -23,8 +23,8 @@
                         </router-link>
                         <span v-if="c.fecha" class="comment-date ms-2">{{ formatDate(c.fecha) }}</span>
                     </div>
-                    <button type="button" v-if="rolUsuario === 'Administrador'" class="delete-icon" @click="abrirModalBorrar(c)">
-                        🗑️
+                    <button type="button" v-if="rolUsuario === 'Administrador'" class="delete-icon btn" @click="abrirModalBorrar(c)">
+                        <i class="bi bi-trash3-fill"></i>
                     </button>
                 </div>
                 <p class="comment-description">{{ c.descripcion }}</p>
@@ -44,7 +44,7 @@
 
 <script setup lang="ts">
 import { ref, defineProps, onMounted, watch } from 'vue';
-import { addComment, getCommentsByBook, deleteComment, getUserRole } from '@/api/api';
+import { addComment, getCommentsByBook, deleteComment, getUserRole, API_URL } from '@/api/api';
 
 const userRaw = localStorage.getItem('user');
 const idUsuario = userRaw ? JSON.parse(userRaw).id : null;
@@ -54,9 +54,7 @@ const comentariosLibro = ref<{nombre_usuario: string, descripcion: string, id_us
 const rolUsuario = ref<string | null>(null);
 const mostrarModal = ref(false);
 const comentarioABorrar = ref<any>(null);
-const API_BASE_URL = 'http://127.0.0.1:3307/api';
 const defaultProfilePic = 'https://ui-avatars.com/api/?name=Usuario&background=cccccc&color=555555&size=256';
-
 
 async function cargarRolUsuario() {
     if (idUsuario) {
@@ -70,7 +68,7 @@ async function cargarRolUsuario() {
 function getProfilePicUrl(foto_perfil?: string) {
     if (foto_perfil) {
         if (foto_perfil.startsWith('http')) return foto_perfil;
-        return API_BASE_URL + foto_perfil;
+        return API_URL + foto_perfil;
     }
     return defaultProfilePic;
 }
@@ -87,6 +85,7 @@ async function cargarComentarios() {
         comentariosLibro.value = res.data;
     }
 }
+
 async function enviarComentario() {
     if (!comentario.value.trim()) {
         alert('Por favor, escribe un comentario antes de enviar.');
@@ -124,8 +123,6 @@ async function confirmarBorrado() {
     comentarioABorrar.value = null;
 }
 
-
-
 onMounted(async () => {
     await cargarRolUsuario();
     await cargarComentarios();
@@ -133,7 +130,6 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-
 .comment {
     background: rgba(110, 108, 108, 0.08); /* semitransparente */
     border-radius: 8px;
@@ -141,8 +137,6 @@ onMounted(async () => {
     margin-bottom: 1rem;
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
-
-
 
 .modal-backdrop {
   position: fixed;
@@ -153,6 +147,7 @@ onMounted(async () => {
   justify-content: center;
   z-index: 9999;
 }
+
 .modal-confirm {
   background: #fff;
   padding: 2rem;
@@ -161,6 +156,7 @@ onMounted(async () => {
   min-width: 300px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }
+
 .delete-icon{
     font-size: 1.2rem; 
     transition: color 0.2s, transform 0.2s; 
@@ -184,6 +180,7 @@ onMounted(async () => {
   color: #000000;
   cursor: pointer;
 }
+
 .user-link:hover {
   color: #8a8b8b;
   text-decoration: underline;
