@@ -65,10 +65,9 @@ Además debe instalar las dependencias de frontend, de la siguiente forma:
 
 ___
 
-**Recuerde poner la URL correcta de su backend en los siguientes archivos:**
+**Recuerde poner la URL correcta de su backend en el frontend:**
 
 + `api.ts`, línea 4. En `/frontend/src/api/api.ts`
-+ `BookView.vue`, línea 154. En `/frontend/src/views/BookView.vue`
 
 El formato es `http://(url):(port)`, por ejemplo: `http://127.0.0.1:3306/api`.
 
