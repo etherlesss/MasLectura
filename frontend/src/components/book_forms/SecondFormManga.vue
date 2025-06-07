@@ -36,14 +36,14 @@
             <label for="inputIdioma" class="form-label mb-1">Idioma</label>
             <select v-model="idioma" id="inputIdioma" class="form-select" required>
                 <option selected>Ninguno</option>
-                <option value="Espanol">Español</option>
-                <option value="Ingles">Inglés</option>
+                <option value="Español">Español</option>
+                <option value="Inglés">Inglés</option>
                 <option value="Otro">Otro</option>
             </select>
         </div>
         <div class="col-md-6">
             <label for="inputChapters" class="form-label mb-1">Número de capítulos</label>
-            <input v-model="numeroCapitulos" type="number" class="form-control" id="inputChapters" required>
+            <input v-model="numeroCapitulos" type="number" class="form-control" id="inputChapters">
         </div>
         <div class="mb-6">
             <label for="basic-url" class="form-label mb-1">Enlace de compra</label>
@@ -181,12 +181,16 @@ async function guardarFormulario() {
         editorial: editorial.value, 
         idioma: idioma.value,
         es_saga: 'N/A',
-        num_capitulos: numeroCapitulos.value,
+        num_capitulos: numeroCapitulos.value === '' ? null : Number(numeroCapitulos.value),
         sinopsis: sinopsis.value
         
     };
     console.log('Datos enviados:', datos);
     emit('guardar', datos); 
+    mensaje.value = '¡Guardado correctamente!';
+        setTimeout(() => {
+            mensaje.value = '';
+        }, 2500);
   
     mensaje.value = '¡Guardado correctamente!';
     } catch (e) {

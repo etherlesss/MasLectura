@@ -77,8 +77,16 @@
                                 <h6>Idioma: {{ libro?.idioma || 'Desconocido'}}</h6>
                             </li>
                             <li class="details">
-                                <h6>Compra: {{ libro?.link_compra || 'Desconocido'}}</h6>
-                            </li>
+                                <h6>
+                                    Compra:
+                                    <span v-if="libro?.link_compra">
+                                        <a :href="libro.link_compra" target="" rel="">
+                                        Clic aquí para comprar
+                                        </a>
+                                    </span>
+                                    <span v-else>Desconocido</span>
+                                </h6>
+                                                                </li>
                             <li class="details">
                                 <h6>Número de capítulos: {{ libro?.num_capitulos || 'Desconocido' }}</h6>
                             </li>
@@ -351,6 +359,8 @@ watch(() => route.params.id, async newId => {
     scrollbar-width: thin;
     scrollbar-color: #ccc #f5f5f5;
 }
+
+
 
 @media (max-width: 576px) {
     .book-view {

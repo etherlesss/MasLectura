@@ -39,7 +39,7 @@
         </div>
         <div class="col-md-6">
             <label for="inputChapters" class="form-label mb-1">Numero de capitulos</label>
-            <input v-model="numeroCapitulos" type="number" class="form-control" id="inputChapters" required>
+            <input v-model="numeroCapitulos" type="number" class="form-control" id="inputChapters">
         </div>
         <div class="mb-6">
             <label for="basic-url" class="form-label mb-1">Enlace de compra</label>
@@ -176,7 +176,7 @@ async function guardarFormulario() {
         link_compra: urlCompra.value,
         editorial: editorial.value,
         idioma: idioma.value,
-        num_capitulos: numeroCapitulos.value,
+        num_capitulos: numeroCapitulos.value === '' ? null : Number(numeroCapitulos.value),
         sinopsis: sinopsis.value,
         es_saga: 'N/A'
     };
