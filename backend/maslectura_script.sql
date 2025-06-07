@@ -11,7 +11,9 @@ CREATE TABLE Usuario (
     rol VARCHAR(50) NOT NULL,
     fecha_nacimiento DATE NOT NULL,
     token_recuperacion VARCHAR(255),
-    exp_recuperacion DATETIME
+    exp_recuperacion DATETIME,
+    foto_perfil VARCHAR(255)
+
 );
 
 CREATE TABLE Genero (

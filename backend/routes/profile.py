@@ -85,7 +85,7 @@ def updateProfile(id_usuario):
 
         # Actualizar los datos del usuario
         data = request.get_json()
-        cur.execute("UPDATE Usuario SET nombre_usuario = %s, mail_usuario = %s, genero_usuario = %s, fecha_nacimiento = %s WHERE id_usuario = %s", (data['nombre_usuario'], data['mail_usuario'], data['genero_usuario'], data['fecha_nacimiento'], id_usuario))
+        cur.execute("UPDATE Usuario SET nombre_usuario = %s, mail_usuario = %s, genero_usuario = %s, fecha_nacimiento = %s, foto_perfil = %s WHERE id_usuario = %s", (data['nombre_usuario'], data['mail_usuario'], data['genero_usuario'], data['fecha_nacimiento'], data.get('foto_perfil', None), id_usuario))
         mysql.connection.commit()
 
         # Respuesta de éxito

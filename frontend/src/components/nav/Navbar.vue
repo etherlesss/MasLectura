@@ -39,7 +39,7 @@
                     <!-- Auth only -->
                     <li class="nav-item dropdown" v-else>
                         <div class="nav-link dropdown-toggle d-flex align-items-center" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src="@/assets/foto-default.png" alt="Default avatar" class="avatar" />
+                            <img :src="profilePicUrl" alt="Avatar" class="avatar" />
                             <p class="m-0">{{ authStore.user.name }}</p>
                         </div>
                         <ul class="dropdown-menu dropdown-menu-end">
@@ -55,14 +55,32 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/token';
+import { getProfile } from '@/api/api';
 
 // Definir variables
 const authStore = useAuthStore();
 const searchQuery = ref<string>('');
 const router = useRouter();
+const API_BASE_URL = 'http://127.0.0.1:3307/api';
+import defaultProfilePic from '@/assets/foto-default.png';
+const userProfile = ref<any>(null);
+
+const profilePicUrl = computed(() => {
+    if (userProfile.value && userProfile.value.foto_perfil) {
+        return API_BASE_URL + userProfile.value.foto_perfil;
+    }
+    return defaultProfilePic;
+});
+
+onMounted(async () => {
+    if (authStore.user?.id) {
+        const res = await getProfile(authStore.user.id);
+        userProfile.value = res.data;
+    }
+});
 
 function handleSearch(event: Event) {
     event.preventDefault();
@@ -92,10 +110,19 @@ function handleSearch(event: Event) {
     color: #fff !important;
 }
 
-.avatar {
-    width: 3rem;
+.navbar-nav .nav-item {
+    display: flex;
+    align-items: center;
 }
 
+.avatar {
+    width: 2.5rem;
+    height: 2.5rem;
+    object-fit: cover;
+    border-radius: 50%; 
+    margin-right: 0.75rem; 
+
+}
 .short-logo {
     width: 3rem;
 }

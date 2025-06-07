@@ -182,6 +182,25 @@ export async function uploadImage(formData: FormData) {
     }
 }
 
+export async function uploadFotoPerfil(formData: FormData) {
+    try {
+        const res = await axios.post(
+            url + '/upload_foto_perfil',
+            formData,
+            {
+                headers: {
+                    // Axios detecta FormData y pone el boundary automáticamente
+                    'Authorization': token ? `Bearer ${token}` : '',
+                }
+            }
+        );
+        return res;
+    } catch (err: any) {
+        console.error('POST uploadFotoPerfil error:', err.response);
+        return err.response;
+    }
+}
+
 export async function addComment(data: { id_usuario: number, descripcion: string, id_libro: number}) {
     return POSTRequest('/comentario', data);
 }

@@ -5,6 +5,7 @@ export interface User {
     genero_usuario: string;
     rol: string;
     fecha_nacimiento: string;
+    foto_perfil: string;
 }
 
 export interface List {

@@ -31,7 +31,15 @@
                     <label for="birthdate" class="form-label mb-1">Fecha de nacimiento</label>
                     <input v-model="user.fecha_nacimiento" type="date" class="form-control" id="birthdate" required>
                 </div>
-                <!-- Botón de guardar cambios -->
+                <!-- Imagen de perfil -->
+                <div class="mb-3">
+                    <label for="profilePic" class="form-label mb-1">Imagen de perfil</label>
+                    <input type="file" class="form-control" id="profilePic" accept="image/*" @change="onFileChange">
+                    <div v-if="previewImg" class="mt-2">
+                        <img :src="previewImg" alt="Vista previa" style="max-width: 120px; max-height: 120px; border-radius: 12px;">
+                    </div>
+                </div>
+                                <!-- Botón de guardar cambios -->
                 <button type="submit" class="btn ml-primary-btn float-end">Guardar cambios</button>
             </form>
         </div>
@@ -43,7 +51,7 @@
 import Navbar from '@/components/nav/Navbar.vue';
 import Footer from '@/components/pageFooter/Footer.vue';
 import { onMounted, ref } from 'vue';
-import { getProfile, updateProfile } from '@/api/api';
+import { getProfile, updateProfile, uploadFotoPerfil } from '@/api/api';
 import { useAuthStore } from '@/stores/token';
 import { formatDateHTML } from '@/util/formatters';
 
@@ -54,6 +62,10 @@ const user = ref<any>({
     genero_usuario: '',
     fecha_nacimiento: ''
 });
+
+//Variable para la vista previa de la imagen
+const selectedFile = ref<File | null>(null);
+const previewImg = ref<string | null>(null);
 
 // Obtener el ID del usuario desde el almacenamiento local
 const authStore = useAuthStore();
@@ -70,11 +82,39 @@ async function fetchUser() {
     }
 }
 
+//Subir imagen de perfil
+function onFileChange(event: Event) {
+    const target = event.target as HTMLInputElement;
+    if (target.files && target.files[0]) {
+        selectedFile.value = target.files[0];
+        previewImg.value = URL.createObjectURL(target.files[0]);
+    }
+}
+
 const handleSubmit = async () => {
     try {
-        // Actualizar los datos del usuario
-        const res = await updateProfile(authStore.user.id, user.value);
+        let foto_perfil = user.value.foto_perfil;
 
+        // Si hay imagen seleccionada, súbela primero
+        if (selectedFile.value) {
+            const formData = new FormData();
+            formData.append('image', selectedFile.value);
+
+            const resImg = await uploadFotoPerfil(formData);
+            if (resImg.status === 201 && resImg.data.filename) {
+                // Construye la URL completa
+                foto_perfil = foto_perfil = resImg.data.url;
+            } else {
+                alert('Error al subir la imagen de perfil');
+                return;
+            }
+        }
+        // Actualizar los datos del usuario
+        const res = await updateProfile(authStore.user.id, {
+            ...user.value,
+            foto_perfil
+        });
+        
         if (res.status === 200) {
             console.log('Usuario actualizado correctamente');
             alert('Usuario actualizado correctamente');
