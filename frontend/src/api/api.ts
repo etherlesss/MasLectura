@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 // URL DEL SERVIDOR BACKEND
+export const API_URL = 'http://127.0.0.1:6640/api';
 
 const url = API_URL;
 
