@@ -63,6 +63,7 @@ CREATE TABLE Comentario (
     id_usuario INT NOT NULL,
     id_libro INT NOT NULL,
     descripcion VARCHAR(1024),
+    fecha DATE,
 	CONSTRAINT comentario_fk FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario),
     CONSTRAINT comentario_libro_fk FOREIGN KEY (id_libro) REFERENCES Libro(id_libro)
 );

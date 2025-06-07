@@ -9,19 +9,25 @@
             </div>
             <div v-for="(c, i) in comentariosLibro" :key="i" class="comment">
                 <div class="d-flex align-items-center justify-content-between">
-                    <router-link
-                  class="user-link"
-                  :to="{ name: 'user-profile', params: { id: c.id_usuario } }"
-                  style="cursor:pointer"
-                >
-                  {{ c.nombre_usuario }}
-                </router-link>
-                    <br>
+                    <div class="d-flex align-items-center">
+                        <img
+                            v-if="c.foto_perfil"
+                            :src="getProfilePicUrl(c.foto_perfil)"
+                            alt="Foto de perfil"
+                            class="comment-profile-pic me-2"/>
+                        <router-link
+                            class="user-link"
+                            :to="{ name: 'user-profile', params: { id: c.id_usuario } }"
+                            style="cursor:pointer">
+                            {{ c.nombre_usuario }}
+                        </router-link>
+                        <span v-if="c.fecha" class="comment-date ms-2">{{ formatDate(c.fecha) }}</span>
+                    </div>
                     <button type="button" v-if="rolUsuario === 'Administrador'" class="delete-icon" @click="abrirModalBorrar(c)">
                         🗑️
                     </button>
                 </div>
-                <p>{{ c.descripcion }}</p>
+                <p class="comment-description">{{ c.descripcion }}</p>
             </div>
             <div v-if="mostrarModal" class="modal-backdrop">
                 <div class="modal-confirm">
@@ -38,16 +44,18 @@
 
 <script setup lang="ts">
 import { ref, defineProps, onMounted, watch } from 'vue';
-import { addComment, getCommentsByBook, deleteComment, getUserRole, getProfile } from '@/api/api';
+import { addComment, getCommentsByBook, deleteComment, getUserRole } from '@/api/api';
 
 const userRaw = localStorage.getItem('user');
 const idUsuario = userRaw ? JSON.parse(userRaw).id : null;
 const props = defineProps<{ idLibro: number}>();
 const comentario = ref('');
-const comentariosLibro = ref<{nombre_usuario: string, descripcion: string, id_usuario: number, id_comentario?: number }[]>([]);
+const comentariosLibro = ref<{nombre_usuario: string, descripcion: string, id_usuario: number, id_comentario?: number, fecha?: string, foto_perfil?: string }[]>([]);
 const rolUsuario = ref<string | null>(null);
 const mostrarModal = ref(false);
 const comentarioABorrar = ref<any>(null);
+const API_BASE_URL = 'http://127.0.0.1:3307/api';
+const defaultProfilePic = 'https://ui-avatars.com/api/?name=Usuario&background=cccccc&color=555555&size=256';
 
 
 async function cargarRolUsuario() {
@@ -57,6 +65,20 @@ async function cargarRolUsuario() {
             rolUsuario.value = res.data.rol;
         }
     }
+}
+
+function getProfilePicUrl(foto_perfil?: string) {
+    if (foto_perfil) {
+        if (foto_perfil.startsWith('http')) return foto_perfil;
+        return API_BASE_URL + foto_perfil;
+    }
+    return defaultProfilePic;
+}
+
+function formatDate(fecha: string) {
+    if (!fecha) return '';
+    const d = new Date(fecha);
+    return d.toLocaleDateString('es-ES', { year: 'numeric', month: 'short', day: 'numeric' });
 }
 
 async function cargarComentarios() {
@@ -152,6 +174,12 @@ onMounted(async () => {
     transition: color 0.2s, transform 0.2s; 
 }
 
+.comment-date {
+    font-size: 0.85rem;
+    color: #4b4949;
+    margin-left: 0.5rem;
+}
+
 .user-link {
   color: #000000;
   cursor: pointer;
@@ -159,5 +187,18 @@ onMounted(async () => {
 .user-link:hover {
   color: #8a8b8b;
   text-decoration: underline;
+}
+
+.comment-profile-pic {
+    width: 2.5rem;
+    height: 2.5rem;
+    object-fit: cover;
+    border-radius: 50%; 
+    margin-right: 0.75rem; 
+    border: 1px solid #5f5d5d;
+}
+
+.comment-description {
+    margin-top: 1rem;
 }
 </style>

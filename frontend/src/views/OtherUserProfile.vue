@@ -2,34 +2,49 @@
     <Navbar />
     <main class="p-5">
         <div class="mb-5">
-            <div class="d-flex align-items-center gap-2">
-                <h1>Perfil</h1>
-                <button type="button" v-if="rolUsuario && rolUsuario === 'Administrador'" class="delete-icon" @click="abrirModalBorrarUsuario">
-                        🗑️
-                </button>
-            </div>
-            <div >
-                <p><b>Nombre de usuario:</b> {{ user?.nombre_usuario }} 
+            <div>
+                <div class="d-flex align-items-center gap-2 mb-4">
+                    <h1>Perfil</h1>
                     <button
-                        v-if="rolUsuario === 'Administrador'"
-                        class="edit-icon"
-                        @click="abrirModalEditarUsuario"
-                        style="margin-left: 8px;"
-                        title="Editar nombre de usuario"
-                        >[Editar]
-                    </button>
-                </p>
-                <p><b>Correo electrónico:</b> {{ user?.mail_usuario }}</p>
-                <p><b>Género: </b> {{ user?.genero_usuario }}</p>
-                <p><b>Fecha de nacimiento:</b> {{ formatDate(user?.fecha_nacimiento || '') }}</p>
+                        type="button"
+                        v-if="rolUsuario && rolUsuario === 'Administrador'"
+                        class="delete-icon"
+                        @click="abrirModalBorrarUsuario"
+                    >[Eliminar]</button>
+                </div>
+                <div class="d-flex align-items-start gap-4 mb-5">
+                    <div class="profile-pic-container">
+                        <img
+                            :src="profilePicUrl"
+                            alt="Foto de perfil"
+                            class="profile-pic"
+                        />
+                    </div>
+                    <div>
+                        <p>
+                            <b>Nombre de usuario:</b> {{ user?.nombre_usuario }}
+                            <button
+                                v-if="rolUsuario === 'Administrador'"
+                                class="edit-icon"
+                                @click="abrirModalEditarUsuario"
+                                style="margin-left: 8px;"
+                                title="Editar nombre de usuario"
+                            >[Editar]</button>
+                        </p>
+                        <p><b>Correo electrónico:</b> {{ user?.mail_usuario }}</p>
+                        <p><b>Género: </b> {{ user?.genero_usuario }}</p>
+                        <p><b>Fecha de nacimiento:</b> {{ formatDate(user?.fecha_nacimiento || '') }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-5">
+                <div class="d-flex align-items-center gap-2">
+                    <h2>Listas</h2>
+                </div>
+                <ListCard :lists="lists" />
             </div>
         </div>
-        <div>
-            <div class="d-flex align-items-center gap-2">
-                <h2>Listas</h2>
-            </div>
-            <ListCard :lists="lists" />
-        </div>
+        <!-- Modales -->
         <div v-if="mostrarModalBorrarUsuario" class="modal-backdrop">
             <div class="modal-confirm">
                 <p>¿Estás seguro de que deseas borrar este usuario? Esta acción no se puede deshacer.</p>
@@ -38,17 +53,17 @@
             </div>
         </div>
         <div v-if="mostrarModalEditarUsuario" class="modal-backdrop">
-        <div class="modal-confirm">
-            <h4>Editar nombre de usuario</h4>
-            <input
-            v-model="nuevoNombreUsuario"
-            class="form-control"
-            placeholder="Nuevo nombre de usuario"
-            style="margin-bottom: 1rem;"
-            />
-            <button @click="editarNombreUsuario" class="btn btn-primary">Guardar</button>
-            <button @click="mostrarModalEditarUsuario = false" class="btn btn-secondary" style="margin-left: 1rem;">Cancelar</button>
-        </div>
+            <div class="modal-confirm">
+                <h4>Editar nombre de usuario</h4>
+                <input
+                    v-model="nuevoNombreUsuario"
+                    class="form-control"
+                    placeholder="Nuevo nombre de usuario"
+                    style="margin-bottom: 1rem;"
+                />
+                <button @click="editarNombreUsuario" class="btn btn-primary">Guardar</button>
+                <button @click="mostrarModalEditarUsuario = false" class="btn btn-secondary" style="margin-left: 1rem;">Cancelar</button>
+            </div>
         </div>
     </main>
     <ChangePwdModal />
@@ -58,7 +73,7 @@
 <script setup lang="ts">
 import Navbar from '@/components/nav/Navbar.vue';
 import Footer from '@/components/pageFooter/Footer.vue';
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { getProfile, getUserLists, getUserRole, deleteUser, updateUserName } from '@/api/api';
 import { formatDate } from '@/util/formatters';
@@ -77,6 +92,19 @@ const idUsuario = Number(route.params.id);
 const mostrarModalBorrarUsuario = ref(false);
 const mostrarModalEditarUsuario = ref(false);
 const nuevoNombreUsuario = ref('');
+const API_BASE_URL = 'http://127.0.0.1:3307/api';
+const defaultProfilePic = 'https://ui-avatars.com/api/?name=Usuario&background=cccccc&color=555555&size=256';
+
+// Computed para la URL de la foto de perfil
+const profilePicUrl = computed(() => {
+    if (user.value && user.value.foto_perfil) {
+        if (user.value.foto_perfil.startsWith('http')) {
+            return user.value.foto_perfil;
+        }
+        return API_BASE_URL + user.value.foto_perfil;
+    }
+    return defaultProfilePic;
+});
 
 // Redirección si el usuario es el mismo que el autenticado
 if (idUsuario === Number(authStore.user.id)) {
@@ -113,7 +141,8 @@ async function editarNombreUsuario() {
           mail_usuario: user.value.mail_usuario,
           genero_usuario: user.value.genero_usuario,
           rol: user.value.rol,
-          fecha_nacimiento: user.value.fecha_nacimiento
+          fecha_nacimiento: user.value.fecha_nacimiento,
+          foto_perfil: user.value.foto_perfil
         };
       }
       mostrarModalEditarUsuario.value = false;
@@ -202,7 +231,7 @@ p {
   box-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }
 
-.edit-icon {
+.edit-icon, .delete-icon {
     border: none;
     background: none;
     color: #252525;
@@ -213,7 +242,30 @@ p {
     font-family: inherit;
     vertical-align: middle;
 }
+.delete-icon:hover {
+    text-decoration: underline;
+}
+
 .edit-icon:hover {
     text-decoration: underline;
+}
+
+.profile-pic-container {
+    min-width: 160px;
+    min-height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile-pic {
+    width: 160px;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 12px; /* Bordes levemente redondeados, pero cuadrado */
+    border: 2px solid #e0e0e0;
+    background: #fafafa;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    transition: box-shadow 0.2s;
 }
 </style>

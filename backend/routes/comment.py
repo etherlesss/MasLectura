@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+from datetime import date
 
 comment_bp = Blueprint('comment', __name__)
 
@@ -9,14 +10,18 @@ def add_comment():
     id_libro = data.get('id_libro')
     id_usuario = data.get('id_usuario') 
     descripcion = data.get('descripcion')
+    fecha = data.get('fecha')
 
     if not id_libro or not id_usuario or not descripcion:
         return jsonify({'message': 'Faltan datos requeridos'}), 400
+    
+    if not fecha:
+        fecha = date.today()
 
     cur = mysql.connection.cursor()
     cur.execute(
-        "INSERT INTO comentario (id_usuario, descripcion, id_libro) VALUES (%s, %s, %s)",
-        (id_usuario, descripcion, id_libro)
+        "INSERT INTO comentario (id_usuario, descripcion, id_libro, fecha) VALUES (%s, %s, %s, %s)",
+        (id_usuario, descripcion, id_libro, fecha)
     )
     mysql.connection.commit()
     cur.close()
@@ -30,7 +35,7 @@ def get_comments(id_libro):
         cur = mysql.connection.cursor()
         cur.execute(
         """
-        SELECT c.id_usuario, c.id_comentario, u.nombre_usuario, c.descripcion
+        SELECT c.id_usuario, c.id_comentario, u.nombre_usuario, u.foto_perfil, c.descripcion, c.fecha
         FROM comentario c
         JOIN usuario u ON c.id_usuario = u.id_usuario
         WHERE c.id_libro = %s
@@ -40,7 +45,7 @@ def get_comments(id_libro):
     )
         rows = cur.fetchall()
         comentarios = [
-            { "id_usuario": row["id_usuario"],"id_comentario": row["id_comentario"], "nombre_usuario": row["nombre_usuario"], "descripcion": row["descripcion"]}
+            { "id_usuario": row["id_usuario"],"id_comentario": row["id_comentario"], "nombre_usuario": row["nombre_usuario"],  "foto_perfil": row["foto_perfil"], "descripcion": row["descripcion"], "fecha": row["fecha"].isoformat() if row["fecha"] else None}
             for row in rows
         ]
         cur.close()
