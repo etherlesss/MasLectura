@@ -5,7 +5,7 @@
     <br>
     <form @submit.prevent class="row g-3">
         <div class="col-md-6">
-            <label for="inputTittle" class="form-label mb-1">Titulo</label>
+            <label for="inputTittle" class="form-label mb-1">Título</label>
             <input  v-model="titulo" type = "text" class="form-control" id="inputTittle" required>
         </div>
         <div class="col-md-6">
@@ -32,13 +32,13 @@
             <label for="inputIdioma" class="form-label mb-1">Idioma</label>
             <select  v-model="idioma" id="inputIdioma" class="form-select" required>
                 <option selected>Ninguno</option>
-                <option value="Espanol">Español</option>
-                <option value="Ingles">Inglés</option>
+                <option value="Español">Español</option>
+                <option value="Inglés">Inglés</option>
                 <option value="Otro">Otro</option>
             </select>
         </div>
         <div class="col-md-6">
-            <label for="inputChapters" class="form-label mb-1">Numero de capitulos</label>
+            <label for="inputChapters" class="form-label mb-1">Número de capitulos</label>
             <input v-model="numeroCapitulos" type="number" class="form-control" id="inputChapters">
         </div>
         <div class="mb-6">

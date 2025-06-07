@@ -155,14 +155,12 @@ async function editarNombreUsuario() {
 
 async function borrarUsuario() {
     mostrarModalBorrarUsuario.value = false;
-    if (confirm('¿Estás seguro de que deseas borrar este usuario? Esta acción no se puede deshacer.')) {
-        const res = await deleteUser(idUsuario);
-        if (res && res.status === 200) {
-            alert('Usuario eliminado correctamente');
-            router.push('/');
-        } else {
-            alert('Error al eliminar el usuario');
-        }
+    const res = await deleteUser(idUsuario);
+    if (res && res.status === 200) {
+        alert('Usuario eliminado correctamente');
+        router.push('/');
+    } else {
+        alert('Error al eliminar el usuario');
     }
 }
 async function fetchUser() {

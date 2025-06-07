@@ -5,7 +5,7 @@
     <br>
     <form @submit.prevent class="row g-3">
         <div class="col-md-6">
-            <label for="inputTittle" class="form-label mb-1">Titulo</label>
+            <label for="inputTittle" class="form-label mb-1">Título</label>
             <input v-model="titulo" type="text" class="form-control" id="inputTittle" required>
         </div>
         <div class="col-md-6">

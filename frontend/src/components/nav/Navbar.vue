@@ -31,7 +31,7 @@
                     </li>
                     <!-- No auth only -->
                     <li class="nav-item" v-if="!authStore.token">
-                        <router-link class="nav-link" to="/login">Iniciar Sesion</router-link>
+                        <router-link class="nav-link" to="/login">Iniciar Sesión</router-link>
                     </li>
                     <li class="nav-item" v-if="!authStore.token">
                         <router-link class="nav-link" to="/signup">Crear Cuenta</router-link>
