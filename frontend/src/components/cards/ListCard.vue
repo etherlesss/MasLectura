@@ -14,8 +14,9 @@
 
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue';
-import { API_URL, getListFirstBook } from '@/api/api';
+import { getListFirstBook } from '@/api/api';
 import type { List } from '@/types/types';
+import { getPortadaUrl } from '@/util/util';
 
 // Definir props
 const props = defineProps<{ lists: List[] }>();
@@ -26,14 +27,7 @@ const images = ref<{ [key: number]: string }>({});
 async function fetchListFirstBook(id_lista: number) {
     try {
         const res = await getListFirstBook(id_lista);
-        if (res.status === 404) {
-            return 'https://demuseo.com/wp-content/uploads/woocommerce-placeholder.png';
-        }
-        if (res.data.portada.startsWith('http')) {
-            return res.data.portada;
-        } else {
-            return API_URL + res.data.portada;
-        }
+        return getPortadaUrl(res.data.portada);
     } catch (err) {
         console.error('Error fetching first book:', err);
         return 'https://demuseo.com/wp-content/uploads/woocommerce-placeholder.png';

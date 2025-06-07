@@ -141,7 +141,8 @@ import Footer from '@/components/pageFooter/Footer.vue';
 import EditRecord from '@/components/edit/EditRecord.vue';
 import HomeCard from '@/components/cards/HomeCard.vue';
 import { ref, onMounted, watch } from 'vue';
-import { getBook, getTagsIdBook, getGenresById, rateBook, getSimilarBooks, getUserRating, getBookRatingCount, API_URL } from '@/api/api';
+import { getBook, getTagsIdBook, getGenresById, rateBook, getSimilarBooks, getUserRating, getBookRatingCount } from '@/api/api';
+import { getPortadaUrl } from '@/util/util';
 import { useRoute, useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/token';
 import type { Book } from '@/types/types';
@@ -159,13 +160,6 @@ const ratingCount = ref<number>(0);
 
 // Obtener el ID del libro desde la ruta
 const idLibro = ref(Number(route.params.id));
-
-function getPortadaUrl(portada: string | undefined): string {
-  if (!portada) return 'https://demuseo.com/wp-content/uploads/woocommerce-placeholder.png';
-  if (portada.startsWith('http')) return portada;
-  // Si portada es "/uploads/archivo.jpg", concatena el backendUrl
-  return API_URL + portada;
-}
 
 function irAEditar() {
   if (libro.value && libro.value.id_libro) {

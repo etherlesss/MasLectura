@@ -13,19 +13,10 @@
 
 <script setup lang="ts">
 import type { Book } from '@/types/types';
-import { API_URL } from '@/api/api';
+import { getPortadaUrl } from '@/util/util';
 
 // Definir props
 const props = defineProps<{ book: Book }>();
-
-// Obtener la URL de la portada del libro
-function getPortadaUrl(portada: string | undefined): string {
-  if (!portada) return 'https://demuseo.com/wp-content/uploads/woocommerce-placeholder.png';
-  if (portada.startsWith('http')) return portada;
-  // Si portada es "/uploads/archivo.jpg", concatena el backendUrl
-  return API_URL + portada;
-}
-
 </script>
 
 <style scoped>
