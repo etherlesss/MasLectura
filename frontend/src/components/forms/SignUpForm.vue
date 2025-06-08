@@ -17,26 +17,26 @@
                 <label for="mail" class="form-label mb-1">Correo electrónico</label>
                 <input v-model="mail" type="email" class="form-control" id="mail" placeholder="jsmith@gmail.com" required>
             </div>
-            <div class="d-flex gap-3">
+            <div class="d-flex flex-column flex-lg-row gap-0 gap-lg-3">
                 <!-- Contraseña -->
-                <div class="mb-3 w-50">
+                <div class="mb-3 grouped-form">
                     <label for="pwd" class="form-label mb-1">Contraseña</label>
                     <input v-model="pwd" type="password" class="form-control" id="pwd" placeholder="contraseña" required>
                 </div>
                 <!-- Confirmar contraseña -->
-                <div class="mb-3 w-50">
+                <div class="mb-3 grouped-form">
                     <label for="pwdconfirm" class="form-label mb-1">Confirmar contraseña</label>
                     <input v-model="pwdconfirm" type="password" class="form-control" id="pwdconfirm" placeholder="contraseña" required>
                 </div>
             </div>
             <div class="d-flex gap-3">
                 <!-- Fecha de nacimiento -->
-                <div class="mb-3 w-50">
+                <div class="mb-3 grouped-form">
                     <label for="birthdate" class="form-label mb-1">Fecha de nacimiento</label>
                     <input v-model="birthdate" type="date" class="form-control" id="birthdate" required>
                 </div>
                 <!-- Genero -->
-                <div class="mb-3 w-50">
+                <div class="mb-3 grouped-form">
                     <label for="gender" class="form-label mb-1">Género</label>
                     <select class="form-select" id="gender" v-model="gender" required>
                         <option selected value="" disabled>Seleccionar...</option>
@@ -108,5 +108,13 @@ const handleSubmit = async () => {
 </script>
 
 <style scoped>
+.grouped-form {
+    width: 50%;
+}
 
+@media (max-width: 576px) {
+    .grouped-form {
+       width: 100%;
+    }
+}
 </style>

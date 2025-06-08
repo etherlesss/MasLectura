@@ -22,7 +22,7 @@
             </button>
             <!-- Links -->
             <div class="collapse navbar-collapse flex-grow-0" id="toggler">
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                <ul class="navbar-nav d-flex align-items-start align-items-lg-center ms-auto mb-2 mb-lg-0">
                     <li class="nav-item">
                         <router-link class="nav-link" to="/">Inicio</router-link>
                     </li>
@@ -38,7 +38,7 @@
                     </li>
                     <!-- Auth only -->
                     <li class="nav-item dropdown" v-else>
-                        <div class="nav-link dropdown-toggle d-flex align-items-center" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <div class="nav-link dropdown-toggle d-flex align-items-center gap-1" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <img :src="profilePicUrl" alt="Avatar" class="avatar" />
                             <p class="m-0">{{ authStore.user.name }}</p>
                         </div>
@@ -109,19 +109,12 @@ function handleSearch(event: Event) {
     color: #fff !important;
 }
 
-.navbar-nav .nav-item {
-    display: flex;
-    align-items: center;
-}
-
 .avatar {
     width: 2.5rem;
     height: 2.5rem;
-    object-fit: cover;
-    border-radius: 50%; 
-    margin-right: 0.75rem; 
-
+    border-radius: 50%;
 }
+
 .short-logo {
     width: 3rem;
 }
