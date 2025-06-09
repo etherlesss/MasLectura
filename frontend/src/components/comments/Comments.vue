@@ -23,7 +23,7 @@
                         </router-link>
                         <span v-if="c.fecha" class="comment-date ms-2">{{ formatDate(c.fecha) }}</span>
                     </div>
-                    <button type="button" v-if="rolUsuario === 'Administrador'" class="delete-icon btn" @click="abrirModalBorrar(c)">
+                    <button type="button" v-if="rolUsuario === 'Administrador' || c.id_usuario === idUsuario" class="delete-icon btn" @click="abrirModalBorrar(c)">
                         <i class="bi bi-trash3-fill"></i>
                     </button>
                 </div>
