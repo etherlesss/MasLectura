@@ -67,6 +67,7 @@ const router = useRouter();
 import defaultProfilePic from '@/assets/foto-default.png';
 const userProfile = ref<any>(null);
 
+// Computed para la URL de la foto de perfil
 const profilePicUrl = computed(() => {
     if (userProfile.value && userProfile.value.foto_perfil) {
         return API_URL + userProfile.value.foto_perfil;
@@ -74,6 +75,7 @@ const profilePicUrl = computed(() => {
     return defaultProfilePic;
 });
 
+// Cargar el perfil del usuario al montar el componente
 onMounted(async () => {
     if (authStore.user?.id) {
         const res = await getProfile(authStore.user.id);

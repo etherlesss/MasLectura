@@ -35,18 +35,21 @@
                   v-if="tipoSeleccionado === 'Libro'"
                   :initialData="secondFormData"
                   :ocultar="true"
+                  :esEdicion="true"
                   @guardar="guardarSecondForm"
                 />
                 <SecondFormNovel
                   v-if="tipoSeleccionado === 'Novela'"
                   :initialData="secondFormData"
                   :ocultar="true"
+                  :esEdicion="true"
                   @guardar="guardarSecondForm"
                 />
                 <SecondFormManga
                   v-if="tipoSeleccionado === 'Manga'"
                   :initialData="secondFormData"
                   :ocultar="true"
+                  :esEdicion="true"
                   @guardar="guardarSecondForm"
                 />
             </div>
@@ -107,6 +110,12 @@ const idUsuario = authStore.user.id;
 const mostrarModal = ref(false);
 const router = useRouter();
 
+const seccionGuardada = ref({
+  datosPrincipales: false,
+  categorias: false,
+});
+
+
 onMounted(async () => {
     try {
         // Obtener el libro
@@ -138,10 +147,9 @@ onMounted(async () => {
         console.error(e);
     }
 });
-const seccionGuardada = ref({
-  datosPrincipales: false,
-  categorias: false,
-});
+
+
+// Funciones para guardar los datos de los formularios
 function guardarSecondForm(data: Record<string, any>) {
     secondFormData.value = data;
     seccionGuardada.value.datosPrincipales = true;
@@ -158,11 +166,12 @@ const puedeGuardarTodo = computed(() =>
   seccionGuardada.value.datosPrincipales && seccionGuardada.value.categorias
 );
 
+// Función para mostrar el modal de confirmación
 function enviarTodo() {
     mostrarModal.value = true;
 }
 
-
+// Función para confirmar y guardar los cambios
 async function confirmarGuardar() {
   mostrarModal.value = false;
   try {
@@ -172,19 +181,16 @@ async function confirmarGuardar() {
       ...secondFormData.value,
       id_usuario: idUsuario,
     });
-    console.log('Datos del libro a actualizar:', secondFormData.value);
     if (responseLibro.status !== 200) throw new Error('Error al actualizar el libro');
 
     // 2. Actualizar géneros
     await updateBookGenres(idLibro, {
       generos: thirdFormData.value.generosSeleccionados,
     });
-    console.log('Etiquetas a guardar', generos.value);
     // 3. Actualizar etiquetas
     await updateBookTags(idLibro, {
       etiquetas: thirdFormData.value.etiquetasSeleccionadas,
     });
-    console.log('Etiquetas a guardar', etiquetas.value);
     alert('¡Cambios guardados correctamente!');
     router.push({ name: 'bookView', params: { id: idLibro } }); // Redirige al libro editado
   } catch (e) {

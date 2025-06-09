@@ -206,25 +206,21 @@ function guardarFirstForm(data: any) {
     // Limpiar los datos de las demás secciones
     secondFormData.value = {};
     thirdFormData.value = {};
-
-    // Mostrar un mensaje de éxito
-    console.log('Datos del primer formulario guardados:', firstFormData.value);
 }
 
 // Guardar datos de la segunda sección
 function guardarSecondForm(data: any) {
     secondFormData.value = data;
     secciones.value.ingresarDatosGuardado = true;
-    console.log('Datos del segundo formulario guardados:', secondFormData.value);
 }
 
 // Guardar datos de la tercera sección
 function guardarThirdForm(data: any) {
     thirdFormData.value = data; // Aquí se guardan los IDs de géneros y etiquetas
     secciones.value.seleccionarCategoriasGuardado = true;
-    console.log('Datos del tercer formulario guardados:', thirdFormData.value);
 }
 
+//Busca los IDs de géneros y etiquetas a partir de sus nombres seleccionados.
 async function buscarIdsPorNombres() {
     const generosSeleccionadosNombres = [...(thirdFormData.value.generosSeleccionados || [])];
     const etiquetasSeleccionadasNombres = [...(thirdFormData.value.etiquetasSeleccionadas || [])];
@@ -247,12 +243,6 @@ async function buscarIdsPorNombres() {
         });
         return etiqueta ? etiqueta.id : null;
     }).filter((id: number | null) => id !== null);
-
-    console.log('Datos enviados:', {
-        generosIds,
-        etiquetasIds,
-    });
-
     return { generosIds, etiquetasIds };
 }
 // Enviar todos los datos
@@ -277,7 +267,6 @@ async function enviarTodo() {
 
         // Obtener el ID del libro recién creado
         const id_libro = responseLibro.data.id_libro;
-        console.log('Libro guardado con ID:', id_libro);
 
         // Enviar los géneros seleccionados al backend (book_genre.py)
         const responseGeneros = await addBookGenre({
@@ -288,8 +277,6 @@ async function enviarTodo() {
        if (responseGeneros.status !== 201 && responseGeneros.status !== 200) {
             throw new Error(`Error al guardar los géneros: ${responseGeneros.status}`);
         }
-
-        console.log('Géneros asociados correctamente.');
 
         // Enviar las etiquetas seleccionadas al backend (book_tag.py)
         const responseEtiquetas = await addBookTag ({

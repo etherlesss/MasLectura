@@ -328,7 +328,7 @@ def updateBook(id_libro):
     cur = None
     try:
         data = request.get_json()
-        # Aquí puedes ajustar los campos según tu modelo
+        # Campos según modelo
         campos = [
             'titulo', 'autor', 'artista', 'anio_publicacion', 'portada', 'estado',
             'link_compra', 'editorial', 'idioma', 'es_saga',

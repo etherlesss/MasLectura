@@ -88,11 +88,14 @@
 import { ref, computed } from 'vue';
 import { uploadImage } from '@/api/api';
 
+// Props para recibir datos iniciales y modo edición
 const props = defineProps<{
   initialData?: Record<string, any>;
   ocultar: boolean;
+  esEdicion?: boolean;
 }>();
 
+// Variables para los campos del formulario
 const titulo = ref(props.initialData?.titulo || '');
 const autor = ref(props.initialData?.autor || '');
 const editorial = ref(props.initialData?.editorial || '');
@@ -115,19 +118,19 @@ const camposRequeridosCompletos = computed(() =>
     autor.value.trim() !== '' &&
     idioma.value.trim() !== '' &&
     sinopsis.value.trim() !== '' &&
-    portadaFile.value !== null
+    (props.esEdicion ? true : portadaFile.value !== null)
 );
 
+//Maneja el cambio de archivo de portada.
 function onFileChange(event: Event) {
     const files = (event.target as HTMLInputElement).files;
-    console.log('onFileChange triggered');
     if (files && files.length > 0) {
         portadaFile.value = files[0];
-        console.log('Archivo seleccionado:', portadaFile.value);
     } else {
         console.log('No se seleccionó ningún archivo');
     }
 }
+// Función para subir la imagen de portada
 async function subirImagen() {
     console.log('Entrando a subirImagen');
     if (!portadaFile.value) {
@@ -136,27 +139,21 @@ async function subirImagen() {
     }
     const formData = new FormData();
     formData.append('imagen', portadaFile.value);
-    console.log('FormData preparado para enviar:', formData);
-
     try {
         console.log('Enviando axios a /api/upload_image...');
         const response = await uploadImage(formData);
-        console.log('Respuesta recibida de /api/upload_image:', response);
-
         if (!response || response.status !== 201) {
-            console.error('Error al subir la imagen. Status:', response?.status);
             alert('Error al subir la imagen');
             return;
         }
         const data = response.data;
-        console.log('Respuesta JSON de la subida:', data);
         urlPortada.value = data.url;
-        console.log('URL de portada guardada:', urlPortada.value);
     } catch (error) {
-        console.error('Excepción en subirImagen:', error);
         alert('Error inesperado al subir la imagen');
     }
 }
+
+// Función para guardar el formulario
 async function guardarFormulario() {
     try{
         if (!camposRequeridosCompletos.value) {
@@ -180,7 +177,6 @@ async function guardarFormulario() {
         sinopsis: sinopsis.value,
         es_saga: 'N/A'
     };
-    console.log('Datos enviados:', datos);
     emit('guardar', datos);
     mensaje.value = '¡Guardado correctamente!';
     } catch (e) {

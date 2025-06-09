@@ -46,6 +46,7 @@
 import { ref, defineProps, onMounted, watch } from 'vue';
 import { addComment, getCommentsByBook, deleteComment, getUserRole, API_URL } from '@/api/api';
 
+
 const userRaw = localStorage.getItem('user');
 const idUsuario = userRaw ? JSON.parse(userRaw).id : null;
 const props = defineProps<{ idLibro: number}>();
@@ -56,6 +57,7 @@ const mostrarModal = ref(false);
 const comentarioABorrar = ref<any>(null);
 const defaultProfilePic = 'https://ui-avatars.com/api/?name=Usuario&background=cccccc&color=555555&size=256';
 
+// Cargar el rol del usuario 
 async function cargarRolUsuario() {
     if (idUsuario) {
         const res = await getUserRole(idUsuario);
@@ -65,6 +67,7 @@ async function cargarRolUsuario() {
     }
 }
 
+// Función para obtener la URL de la foto de perfil
 function getProfilePicUrl(foto_perfil?: string) {
     if (foto_perfil) {
         if (foto_perfil.startsWith('http')) return foto_perfil;
@@ -73,12 +76,14 @@ function getProfilePicUrl(foto_perfil?: string) {
     return defaultProfilePic;
 }
 
+// Formatear la fecha al estilo español
 function formatDate(fecha: string) {
     if (!fecha) return '';
     const d = new Date(fecha);
     return d.toLocaleDateString('es-ES', { year: 'numeric', month: 'short', day: 'numeric' });
 }
 
+// Cargar los comentarios del libro
 async function cargarComentarios() {
     const res = await getCommentsByBook(props.idLibro);
     if (res && res.status === 200) {
@@ -86,6 +91,7 @@ async function cargarComentarios() {
     }
 }
 
+// Enviar un nuevo comentario
 async function enviarComentario() {
     if (!comentario.value.trim()) {
         alert('Por favor, escribe un comentario antes de enviar.');
@@ -105,11 +111,13 @@ async function enviarComentario() {
     await cargarComentarios();
 }
 
+// Abrir el modal de confirmación de borrado
 function abrirModalBorrar(comentario: any) {
     comentarioABorrar.value = comentario;
     mostrarModal.value = true;
 }
 
+// Confirmar el borrado del comentario
 async function confirmarBorrado() {
     if (comentarioABorrar.value) {
         const res = await deleteComment(comentarioABorrar.value.id_comentario);
@@ -123,6 +131,7 @@ async function confirmarBorrado() {
     comentarioABorrar.value = null;
 }
 
+// Cargar los comentarios y el rol del usuario al montar el componente
 onMounted(async () => {
     await cargarRolUsuario();
     await cargarComentarios();

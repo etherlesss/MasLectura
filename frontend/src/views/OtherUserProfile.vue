@@ -109,20 +109,24 @@ if (idUsuario === Number(authStore.user.id)) {
   router.replace('/my-profile');
 }
 
+// Cargar el rol del usuario
 async function cargarRolUsuario() {
     const res = await getUserRole(authStore.user.id); 
     rolUsuario.value = res.data.rol;
 }
 
+// Función para abrir el modal de borrar usuario
 function abrirModalBorrarUsuario() {
   mostrarModalBorrarUsuario.value = true;
 }
 
+// Función para abrir el modal de editar nombre de usuario
 function abrirModalEditarUsuario() {
   nuevoNombreUsuario.value = user.value?.nombre_usuario || '';
   mostrarModalEditarUsuario.value = true;
 }
 
+// Función para editar el nombre de usuario
 async function editarNombreUsuario() {
   if (!nuevoNombreUsuario.value.trim()) {
     alert('El nombre de usuario no puede estar vacío.');
@@ -153,6 +157,7 @@ async function editarNombreUsuario() {
   }
 }
 
+// Función para borrar el usuario
 async function borrarUsuario() {
     mostrarModalBorrarUsuario.value = false;
     const res = await deleteUser(idUsuario);
@@ -163,6 +168,8 @@ async function borrarUsuario() {
         alert('Error al eliminar el usuario');
     }
 }
+
+// Función para obtener el perfil del usuario
 async function fetchUser() {
     try {
         const userId = Number(route.params.id);
@@ -173,6 +180,7 @@ async function fetchUser() {
     }
 }
 
+// Función para obtener las listas del usuario
 async function fetchUserLists() {
     try {
         const userId = Number(route.params.id);

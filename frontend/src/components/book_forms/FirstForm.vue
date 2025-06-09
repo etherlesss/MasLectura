@@ -32,6 +32,8 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+
+// Componente para seleccionar el tipo de lectura y guardar los datos iniciales
 const props = defineProps<{ initialData?: Record<string, any> }>();
 const emit = defineEmits(['tipoSeleccionado', 'guardar']);
 const tipo = ref(props.initialData?.tipo|| '');
@@ -47,7 +49,6 @@ function emitirSeleccion() {
 function guardarFormulario() {
     try {
         const datos = { tipo: tipo.value };
-        console.log('Datos enviados:', datos);
         emit('guardar', datos);
         mensaje.value = '¡Guardado correctamente!';
     } catch (e) {

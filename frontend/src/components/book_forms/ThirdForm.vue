@@ -111,7 +111,6 @@ onMounted(async () => {
     try {
         const resSelGeneros = await getGenresById(propsIdLibro.idLibro);
         if (resSelGeneros.status === 200) {
-            console.log('Respuesta de getGenresById:', resSelGeneros.data);
             generosSeleccionados.value = resSelGeneros.data;
         }
     } catch (e) { console.error('Error al cargar géneros seleccionados:', e); }
@@ -119,15 +118,10 @@ onMounted(async () => {
     try {
         const resSelEtiquetas = await getTagsIdBook(propsIdLibro.idLibro);
         if (resSelEtiquetas.status === 200) {
-            console.log('Respuesta de getTagsIdBook:', resSelEtiquetas.data);
             etiquetasSeleccionadas.value = resSelEtiquetas.data;
         }
     } catch (e) { console.error('Error al cargar etiquetas seleccionadas:', e); }
 }
-    console.log('Todos los géneros:', generos.value.map(g => g.nombre));
-    console.log('Seleccionados:', generosSeleccionados.value);
-    console.log('Todas las etiquetas:', etiquetas.value.map(e => e.nombre));
-    console.log('Seleccionadas:', etiquetasSeleccionadas.value);
 });
 
 // Filtrar géneros basados en la búsqueda del usuario
@@ -150,8 +144,6 @@ const etiquetasFiltradas = computed(() => {
 function agregarEtiqueta(etiqueta: string) {
     if (!etiquetasSeleccionadas.value.includes(etiqueta)) {
         etiquetasSeleccionadas.value.push(etiqueta);
-        console.log('Etiquetas seleccionadas:', etiquetasSeleccionadas.value);
-        console.log('Etiquetas filtradas:', etiquetasFiltradas.value);
     } else {
         console.warn(`La etiqueta "${etiqueta}" ya está seleccionada.`);
     }
@@ -169,6 +161,7 @@ const camposRequeridosCompletos = computed(() =>
     etiquetasSeleccionadas.value.length > 0
 );
 
+// Función para guardar el formulario
 function guardarFormulario() {
     try {
         if (!camposRequeridosCompletos.value) {
@@ -182,7 +175,6 @@ function guardarFormulario() {
             generosSeleccionados: generosSeleccionados.value,
             etiquetasSeleccionadas: etiquetasSeleccionadas.value
         };
-        console.log('Datos enviados:', datos);
         emit('guardar', datos); // Emitir los datos al componente padre
         mensaje.value = '¡Guardado correctamente!';
         setTimeout(() => {
