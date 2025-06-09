@@ -66,6 +66,12 @@
         </div>
 
         <div class="mb-6">
+            <div class = "edicion-portada" v-if="esEdicion && urlPortada">
+                <label class="form-label mb-1">Portada actual</label>
+                <div>
+                    <img :src="getPortadaUrl(urlPortada)" alt="Portada actual" style="max-width: 120px; max-height: 180px; border-radius: 8px; margin-bottom: 1rem;">
+                </div>
+            </div>
             <label for="portada" class="form-label mb-1">Portada</label>
             <input @change="onFileChange" type="file" class="form-control" id="portada" accept="image/*">
         </div>
@@ -86,7 +92,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { uploadImage } from '@/api/api';
+import { API_URL, uploadImage } from '@/api/api';
 
 // Props para recibir datos iniciales y modo edición
 const props = defineProps<{
@@ -130,6 +136,14 @@ function onFileChange(event: Event) {
         console.log('No se seleccionó ningún archivo');
     }
 }
+
+//Obtener la URL de la portada
+function getPortadaUrl(portada: string) {
+  if (!portada) return '';
+  if (portada.startsWith('http')) return portada;
+  return API_URL + portada;
+}
+
 // Función para subir la imagen de portada
 async function subirImagen() {
     console.log('Entrando a subirImagen');

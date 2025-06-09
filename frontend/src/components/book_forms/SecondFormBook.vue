@@ -46,9 +46,11 @@
             </div>
         </div>
         <div class="mb-6">
+            <div class = "edicion-portada" v-if="esEdicion && urlPortada">
             <label class="form-label mb-1">Portada actual</label>
             <div>
                 <img :src="getPortadaUrl(urlPortada)" alt="Portada actual" style="max-width: 120px; max-height: 180px; border-radius: 8px; margin-bottom: 1rem;">
+            </div>
             </div>
             <label for="portada" class="form-label mb-1">Portada</label>
             <input @change="onFileChange" type="file" class="form-control" id="portada" accept="image/*">
