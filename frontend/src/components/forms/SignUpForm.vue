@@ -21,12 +21,30 @@
                 <!-- Contraseña -->
                 <div class="mb-3 grouped-form">
                     <label for="pwd" class="form-label mb-1">Contraseña</label>
-                    <input v-model="pwd" type="password" class="form-control" id="pwd" placeholder="contraseña" required>
+                    <input
+                        v-model="pwd"
+                        class="form-control"
+                        type="password"
+                        id="pwd"
+                        placeholder="contraseña"
+                        pattern='^(?=.*[!@#$%^&*(),.?\":{}|<>])[^\s]{6,30}$'
+                        title="La contraseña debe tener entre 6 y 30 caracteres y al menos un carácter especial"
+                        required
+                    >
                 </div>
                 <!-- Confirmar contraseña -->
                 <div class="mb-3 grouped-form">
                     <label for="pwdconfirm" class="form-label mb-1">Confirmar contraseña</label>
-                    <input v-model="pwdconfirm" type="password" class="form-control" id="pwdconfirm" placeholder="contraseña" required>
+                    <input
+                        v-model="pwdconfirm"
+                        type="password"
+                        class="form-control"
+                        id="pwdconfirm"
+                        placeholder="contraseña"
+                        pattern='^(?=.*[!@#$%^&*(),.?\":{}|<>])[^\s]{6,30}$'
+                        title="La contraseña debe tener entre 6 y 30 caracteres y al menos un carácter especial"
+                        required
+                    >
                 </div>
             </div>
             <div class="d-flex gap-3">
@@ -72,6 +90,13 @@ const handleSubmit = async () => {
         // Validar que las contraseñas coincidan
         if (pwd.value !== pwdconfirm.value) {
             alert('Las contraseñas no coinciden. Por favor, inténtelo de nuevo.');
+            return;
+        }
+
+        // Validar que las contraseñas cumplan con el patrón
+        const passwordPattern = /^(?=.*[!@#$%^&*(),.?":{}|<>])[^\s]{6,30}$/;
+        if (!passwordPattern.test(pwd.value)) {
+            alert('La contraseña debe tener entre 6 y 30 caracteres, incluir al menos un carácter especial y no contener espacios.');
             return;
         }
 
