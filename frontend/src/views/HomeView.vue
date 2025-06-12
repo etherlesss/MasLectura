@@ -76,10 +76,7 @@ async function fetchRecommendations() {
                 const recommendedBooks = res.data
                     .map((rec: any) => books.value.find(book => book.id_libro === rec.id_libro))
                     .filter((book: any) => !!book); // Eliminar undefined
-
-                // Tomar 10 del pool
-                const shuffled = recommendedBooks.sort(() => 0.5 - Math.random());
-                recommended.value = shuffled.slice(0, 10);
+                recommended.value = recommendedBooks;
             }
         } catch (err) {
             console.error('Error fetching recommendations:', err);
