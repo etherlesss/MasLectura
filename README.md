@@ -162,7 +162,7 @@ ___
 
 ### Entrenar el modelo
 
-Para entrenar el modelo, es necesario ingresar a `/backend` y luego ejecutar el siguiente comando:
+Para entrenar el modelo, es necesario estar con el entorno virtual (venv), ingresar a `/backend` y luego ejecutar el siguiente comando:
 
 ```sh
 python -m ai.train
