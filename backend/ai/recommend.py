@@ -95,8 +95,18 @@ def getRecommendations(user_id, model, user_embeddings, book_embeddings, user_id
         tag_vec = tags_onehot.loc[book_id].values if book_id in tags_onehot.index else np.zeros(tags_onehot.shape[1])
         features = np.concatenate([user_embeddings[user_idx], book_embeddings[book_idx], genre_vec, tag_vec])
         pred_score = model.predict(features.reshape(1, -1))[0]
+        pred_score = max(1, min(10, pred_score))
         pred.append((book_id, pred_score))
 
     # Ordenar y devolver los top_n
     pred.sort(key=lambda x: x[1], reverse=True)
-    return pred[:top_n]
+
+    # Seleccionar 10 de los top_n libros recomendados
+    import random
+    sample_size = min(10, len(pred))
+    items_random = random.sample(pred[:top_n], sample_size)
+    pred = items_random
+    
+    print(f"Predicciones para el usuario {user_id}: {pred}")
+
+    return pred
