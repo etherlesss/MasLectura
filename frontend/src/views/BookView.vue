@@ -51,7 +51,15 @@
                                 <h6>Idioma: {{ libro?.idioma || 'Desconocido'}}</h6>
                             </li>
                             <li class="details">
-                                <h6>Compra: {{ libro?.link_compra || 'Desconocido'}}</h6>
+                                <h6>
+                                    Compra:
+                                    <span v-if="libro?.link_compra">
+                                        <a :href="libro.link_compra" target="" rel="">
+                                        Clic aquí para comprar
+                                        </a>
+                                    </span>
+                                    <span v-else>Desconocido</span>
+                                </h6>
                             </li>
                             <li class="details" v-if="libro.es_saga.toLowerCase() === 'si'">
                                 <h6>Nombre de saga: {{ libro?.titulo_saga || 'Desconocido'}}</h6>
@@ -86,7 +94,7 @@
                                     </span>
                                     <span v-else>Desconocido</span>
                                 </h6>
-                                                                </li>
+                            </li>
                             <li class="details">
                                 <h6>Número de capítulos: {{ libro?.num_capitulos || 'Desconocido' }}</h6>
                             </li>
