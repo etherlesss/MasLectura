@@ -311,8 +311,12 @@ def rateBook(id_libro):
             # Si el usuario no ha calificado el libro, insertar una nueva calificación
             cur.execute("INSERT INTO Calificacion_Usuario (id_usuario, id_libro, puntaje) VALUES (%s, %s, %s)", (id_usuario, id_libro, puntaje))
         
+        # Calcular el nuevo promedio de calificaciones del libro
+        cur.execute("SELECT AVG(puntaje) as promedio FROM Calificacion_Usuario WHERE id_libro = %s", (id_libro,))
+        resultado = cur.fetchone()
+
         # Actualizar la calificación del libro
-        cur.execute("UPDATE libro SET promedio = %s WHERE id_libro = %s", (puntaje, id_libro))
+        cur.execute("UPDATE libro SET promedio = %s WHERE id_libro = %s", (resultado['promedio'], id_libro))
         mysql.connection.commit()
 
         return jsonify({'message': 'Calificación actualizada correctamente'}), 200
