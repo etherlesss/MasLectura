@@ -52,6 +52,7 @@ Se considera buena práctica el uso de un entorno virtual para evitar errores en
 
 Los pasos se encuentran a continuación:
 
++ Ingrese a backend `cd backend`.
 + Se comienza por la creación del entorno virtual, utilizando el comando `python -m venv .venv`.
 + Después, se debe activar el entorno virtual, mediante la ejecución de `.\.venv\Scripts\activate`. Esto permite que todas las dependencias se instalen solo dentro de este proyecto, y no globalmente. Evitando así conflictos con dependencias instaladas globalmente, como fue mencionado anteriormente.
 + Instalar las dependencias utilizando `pip install -r requirements.txt`. _Es importante considerar que debes dentro de la carpeta /backend para esto._
